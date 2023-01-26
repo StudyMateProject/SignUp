@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <ul>
+        <li><input name="btnLogin" type="button" sec:authorize="isAnonymous()" value="로그인" onclick="location.href='loginform'"></li>
+        <li><input type="button" sec:authorize="isAuthenticated()" value="로그아웃" onclick="location.href='/logout'"></li>
+    </ul>
+</body>
+</html>

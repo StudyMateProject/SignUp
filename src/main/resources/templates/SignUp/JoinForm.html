@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입 페이지</title>
+</head>
+<body>
+    <form action="/joinform/join" method="post" th:object="${memberDTO}">
+        <input name="platform" type="hidden" value="Soju">
+        <input name="roleName" type="hidden" value="USER">
+        <input id="hEmailCheck" type="text">
+        <input id="hEmailKey" type="text">
+        <input id="hNickname" type="text">
+        <ul>
+            <li><label>아이디 </label><input th:field="*{emailId}" type="text">
+                <input type="button" value="인증번호 전송" onclick="sendEmail(this.form)">
+            </li>
+            <li><label>인증번호 입력 </label><input id="emailKey" type="text">
+                <input type="button" value="인증번호 확인" onclick="checkNum()">
+            </li>
+            <li><label>비밀번호 </label><input th:field="*{pwd}" type="password"></li>
+            <li><label>이름 </label><input th:field="*{name}" type="text"></li>
+            <li><label>닉네임(별명) </label><input th:field="*{nickname}" type="text">
+                <input type="button" value="중복확인" onclick="checkNickname(this.form)">
+            </li>
+            <li><label>생일 </label><input th:field="*{birthday}" type="date"></li>
+            <li><label>성별 </label><label>남</label><input th:field="*{gender}" type="radio" value="M">
+                                   <label>여</label><input th:field="*{gender}" type="radio" value="W"></li>
+            <li><label>휴대전화 </label><input th:field="*{phoneNumber}" type="tel"></li>
+            <li><label>주소 </label><input th:field="*{address}" type="text"></li>
+            <li><label>관심분야 </label><select th:field="*{studyType}"><option value="">관심분야</option>
+                                                                      <option value="computer">컴퓨터 / IT</option>
+                                                                      <option value="math">수학</option>
+                                                                      <option value="management">경영 / 마케팅</option>
+                                                                      <option value="design">디자인</option>
+                                                                      <option value="education">교육</option>
+                                                                      <option value="literature">문학</option>
+                                                                      <option value="game">게임</option>
+                                                                      <option value="engineering">공학</option>
+                                                                      <option value="language">언어</option>
+                                                                      <option value="employment">취업</option>
+                                                                      <option value="entrance">입시</option>
+                                                                      <option value="etc">기타</option></select></li>
+        </ul>
+        <input type="submit" value="가입하기">
+    </form>
+<!--JS----------------------------------------------------------------------------------------------------------------->
+    <!-- Ajax 사용을 위한 js를 추가 -->
+    <script src="/js/httpRequest.js"></script>
+    <script>
+        function sendEmail(f) {
+            let emailId = f.emailId.value; //이메일 입력값 가져오기
+
+            let url = "/joinform/emailcheck";
+            let param = "emailId=" + emailId;
+            sendRequest(url, param, resultSendEmail, "POST");
+        }
+
+        function resultSendEmail() {
+            if ( xhr.readyState == 4 && xhr.status == 200 ) {
+                let data = xhr.responseText; //email check 값
+                let hEmailCheck = document.getElementById("hEmailCheck"); //중복체크용 값
+                let hEmailKey = document.getElementById("hEmailKey"); //이메일키 확인
+
+                if ( data == "no" ) {
+                    alert("이미 존재하는 아이디입니다.");
+                    hEmailCheck.value = "false";
+                    return;
+                } else {
+                    alert("인증메일을 전송했습니다.");
+                    hEmailKey.value = data;
+                }
+            }
+        }
+
+        function checkNum() {
+            let emailKey = document.getElementById("emailKey");
+            let hEmailKey = document.getElementById("hEmailKey");
+            let hEmailCheck = document.getElementById("hEmailCheck");
+
+            if ( emailKey == hEmailKey ) {
+                alert("인증되었습니다.");
+                hEmailCheck.value = "true"; //이메일체크값 밸류변경
+                emailKey.readOnly = true;
+                return;
+            } else {
+                alert("인증번호를 다시 확인해주세요");
+                hEmailCheck.value = "false";
+                emailKey.value = "";
+                return;
+            }
+        }
+    </script>
+
+    <script>
+        function checkNickname(f) {
+            let nickname = f.nickname.value; //입력한 닉네임 가져오기
+
+            let url = "/joinform/nicknamecheck";
+            let param = "nickname=" + nickname;
+            sendRequest(url, param, resultCheckNickname, "POST");
+        }
+
+        function resultCheckNickname() {
+             if ( xhr.readyState == 4 && xhr.status == 200 ) {
+                 let data = xhr.responseText; //닉네임
+                 let hNickname = document.getElementById("hNickname");
+
+                 if ( data == "no" ) {
+                    alert("이미 존재하는 닉네임입니다.");
+                    hNickname.value = "false";
+                 } else {
+                    alert("사용 가능한 닉네임입니다.");
+                    hNickname.value = data;
+                 }
+                 return;
+             }
+        }
+    </script>
+</body>
+</html>

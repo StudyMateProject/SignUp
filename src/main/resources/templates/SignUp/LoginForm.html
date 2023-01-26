@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+</head>
+<body>
+    <form action="/loginform/login" method="post">
+        <ul>
+            <li><label>아이디 </label><input name="emailId" type="text"></li>
+            <li><label>비밀번호 </label><input name="pwd" type="password"></li>
+            <li><label>로그인 상태 유지 </label><input name="remember-me" type="checkbox"></li>
+
+            <li><div th:if="${error}">
+                <p th:text="${errorMsg}"></p></div></li>
+        </ul>
+        <input type="submit" value="로그인">
+        <input name="btnJoin" type="button" value="회원가입" onclick="location.href='/joinform'">
+    </form>
+</body>
+</html>
