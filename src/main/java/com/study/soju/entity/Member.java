@@ -81,6 +81,7 @@ public class Member {
         private String studyType;
         private String platform;
         private String roleName;
+        private String detailAddress;
 
 
         //DTO를 Entity로 변환
@@ -96,7 +97,7 @@ public class Member {
                     .birthday(birthday)
                     .gender(gender)
                     .phoneNumber(phoneNumber)
-                    .address(address)
+                    .address(address + " " + detailAddress)
                     .studyType(studyType)
                     .platform(platform)
                     .roleName(roleName)

@@ -47,6 +47,7 @@ public class SignUpController {
     @ResponseBody
     public String emailCheck(String emailId) {
         String checkEmailId =  signUpService.checkEmailId(emailId);
+        System.out.print(checkEmailId);
         return checkEmailId;
     }
 
