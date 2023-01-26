@@ -147,4 +147,4 @@
 
 #### 📎 주소 API
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-##### ✔ 다음(카카오) 주소 API사용, 주소 입력 Textbox 혹은 '주소찾기' 버튼 클릭 시 주소 검색할 수 있는 팝업창 생성, 상세주소 입력시 DTO에서 '주소 + 상세주소'로 저장되도록 하게함
+##### ✔ 다음(카카오) 주소 API사용, 주소 입력 Textbox 혹은 '주소찾기' 버튼 클릭 시 주소 검색할 수 있는 팝업창 생성, 상세주소 입력시 DTO에서 DB에 '주소 + 상세주소'로 저장되도록 하게함
