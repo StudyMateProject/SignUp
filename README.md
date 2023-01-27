@@ -19,23 +19,23 @@
 #### 📕 Member Table
 	CREATE TABLE Member (
 	################ 회원가입 전 입력 ################
-	emailId VARCHAR(50) PRIMARY KEY, #이메일 형식 아이디
-	pwd VARCHAR(255) NOT NULL, #비밀번호
-        name VARCHAR(10) NOT NULL, #이름
-        nickname VARCHAR(20) UNIQUE NOT NULL, #닉네임
-        birthday DATE NOT NULL, #생년월일
-        gender VARCHAR(1) NOT NULL, #성별
-        phoneNumber VARCHAR(15) UNIQUE NOT NULL, #핸드폰 번호
-        address VARCHAR(100) NOT NULL, #주소
-        studyType VARCHAR(10) NOT NULL, #관심있는 분야
-        platform VARCHAR(10) NOT NULL, #플랫폼
-        roleName VARCHAR(100) NOT NULL, #Spring Security 권한   
+		emailId VARCHAR(50) PRIMARY KEY, #이메일 형식 아이디
+		pwd VARCHAR(255) NOT NULL, #비밀번호
+		name VARCHAR(10) NOT NULL, #이름
+		nickname VARCHAR(20) UNIQUE NOT NULL, #닉네임
+		birthday DATE NOT NULL, #생년월일
+		gender VARCHAR(1) NOT NULL, #성별
+		phoneNumber VARCHAR(15) UNIQUE NOT NULL, #핸드폰 번호
+		address VARCHAR(100) NOT NULL, #주소
+		studyType VARCHAR(10) NOT NULL, #관심있는 분야
+		platform VARCHAR(10) NOT NULL, #플랫폼
+		roleName VARCHAR(100) NOT NULL, #Spring Security 권한   
       
-        ################ 회원가입 후 입력 ################
-        profileImage VARCHAR(100), #프로필 사진
-        selfIntro VARCHAR(255), #자기소개
-        achievement VARCHAR(100) #칭호
-    );
+		################ 회원가입 후 입력 ################
+		profileImage VARCHAR(100), #프로필 사진
+		selfIntro VARCHAR(255), #자기소개
+		achievement VARCHAR(100) #칭호
+	);
 ##### ✏ 회원가입을 진행하면, DB에 정보가 저장되고 저장된 정보를 바탕으로 로그인 기능 (아이디 존재 여부, 비밀번호 일치 확인) 구현 이때, 비밀번호는 Spring Framework중 하나인 PasswordEncoder를 이용하여 Hash값으로 암호화하여 DB에 저장하도록 한다. 또한, 로그인시 입력하면 이를 같은 방식으로 암호화하여 비교해 일치/불일치를 판별한다.
 
 ##### ✏ Spring Security로 회원가입 시 권한을 부여하고(USER or ADIM / 회원가입시 일반 이용자는 모두 USER 권한 부여), 접속이 가능한 경로를 지정해준다. 로그인에 대한 기능도 response 기능을 필요로 하지 않고 Security에서 처리해준다. 또한, 개인의 세션을 관리해주며, 자동로그인 등의 설정도 가능하다.
