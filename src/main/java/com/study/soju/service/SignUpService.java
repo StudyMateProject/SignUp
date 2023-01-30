@@ -92,7 +92,7 @@ public class SignUpService implements UserDetailsService {
         if ( member != null ) {
             return "no";
         } else {
-            return "yes";
+            return nickname;
         }
     }
 

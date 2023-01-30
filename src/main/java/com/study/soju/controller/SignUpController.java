@@ -30,6 +30,7 @@ public class SignUpController {
     //회원가입 진행
     @PostMapping("/joinform/join")
     public String join(Member.rqJoinMember rqJoinMember, Model model) {
+        //
         //Member DTO / 비밀번호 암호화 메서드 전송
        signUpService.joinMember(rqJoinMember, passwordEncoder);
         return "SignUp/LoginForm";  //로그인으로 이동
