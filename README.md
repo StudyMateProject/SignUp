@@ -213,4 +213,23 @@
 	}
 	...
 	
-##### ✏ 입력한 정보들의 유효성 검사를 진행한다. 회원가입시 빈칸이 없고, 중복체크 및 형식을 따르지 않았다면 가입이 되지 않도록 한다. \n emailId는 이메일 형식이 지켜지고, 인증번호 확인을 진행했는지 확인\n pwd는 형식이 지켜지고 비밀번호 확인과 일치하는지 확인\n 이외에는 입력했는지, 중복체크확인을 했는지 확인을 하는 과정을 진행한 후 가입을 진행하도록 한다. 
+##### ✏ 입력한 정보들의 유효성 검사를 진행한다. 회원가입시 빈칸이 없고, 중복체크 및 형식을 따르지 않았다면 가입이 되지 않도록 한다. emailId는 이메일 형식이 지켜지고, 인증번호 확인을 진행했는지 확인 pwd는 형식이 지켜지고 비밀번호 확인과 일치하는지 확인\n 이외에는 입력했는지, 중복체크확인을 했는지 확인을 하는 과정을 진행한 후 가입을 진행하도록 한다. 
+
+### 🧩 02/01 : 회원가입 완료 & ID찾기 & PW 재설정
+
+#### 📎 ID 찾기
+    @Query("SELECT m.emailId FROM Member m WHERE m.name = :name AND m.phoneNumber = :phoneNumber")
+    String findEmailId(@Param("name") String name, @Param("phoneNumber") String phoneNumber);
+##### ✏ ID를 찾기 위해서 '이름(name)' '핸드폰 번호(phoneNumber)'을 입력받으면 MemberRepsitory에서 @Query어노테이션을 활용해서 name과 phoneNumber가 모두 일치하는 emailId를 반환하고 이를 다음페이지("이메일 찾기 결과 페이지")로 보내 확인할 수 있도록 한다.
+
+#### 📎 PWD 재설정을 위한 조건 확인
+    @Query("SELECT m.emailId FROM Member m WHERE m.emailId = :emailId AND m.phoneNumber = :phoneNumber AND  m.name = :name")
+    String findPwd(@Param("emailId") String emailId, @Param("name") String name, @Param("phoneNumber") String phoneNumber);
+##### ✏ PWD를 재설정하기 위해서는 이메일(emailId)를 입력하고, 위에서 진행했던 인증번호 확인 과정을 거치고 '이름(name)' '핸드폰 번호(phoneNumber)'를 입력받아 해당하는 정보로 가입된 유저가 있는지 먼저 확인한다. 비밀번호값을 전달하기에는 보안상 문제가 생길 가능성이 있으므로 아이디값을 전달해서 유저만 있는지 확인한다. 이후에 모든 정보가 일치하는 유저가 있고, 이메일 인증을 받았다면, 비밀번호 재설정 페이지로 이동한다. 
+
+#### 📎 PWD 재설정
+    @Query("UPDATE Member m SET m.pwd = :pwd WHERE m.emailId = :emailId")
+    @Modifying // INSERT / UPDATE / DELETE 를 사용할 때 필요한 어노테이션
+    @Transactional // UPDATE / DELETE 를 사용할 때 필요한 어노테이션
+    int findChangePwd(@Param("emailId") String emailId, @Param("pwd") String pwd);
+##### ✏ 비밀번호 재설정을 위해서 아이디(emailId)값을 전페이지에서 전달받고, 그 아이디에 해당하는 비밀번호를 변경할 수 있도록 한다. @Query에서 UPDATE 쿼리문을 작성하기에 @Modifying + @Transactional 어노테이션도 작성해 주어야 한다. @Modifying는 INSERT / UPDATE / DELETE 를 사용할 때 필요한 어노테이션이고,  @Transactional는 UPDATE / DELETE 를 사용할 때 필요한 어노테이션이다. 또한 UPDATE를 쓰면 반환값은 int로 하도록한다. 
