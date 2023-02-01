@@ -158,3 +158,59 @@
 #### 📎 주소 API
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 ##### ✏ 다음(카카오) 주소 API사용, 주소 입력 Textbox 혹은 '주소찾기' 버튼 클릭 시 주소 검색할 수 있는 팝업창 생성, 상세주소 입력시 DTO에서 DB에 '주소 + 상세주소'로 저장되도록 하게함
+
+### 🧩 01/30 : 휴대폰 인증 API & 유효성 검사
+
+#### 📎 휴대폰 인증 API
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>  <!--원래 jquery를 사용해서인지 써줘야 실행됨-->
+    <script src="/js/httpRequest.js"></script>
+    <script>
+        function btnPhoneCheck(){
+            let hPhoneCheck = document.getElementById("hPhoneCheck"); //인증 성공 여부
+            let phoneNumber = document.getElementById("phoneNumber"); //핸드폰번호
+            var IMP = window.IMP; //init로 객체초기화(가맹점식별코드)
+            IMP.init(""); //가맹점 번호
+            IMP.certification({
+                popup : true
+            } ,function (rsp) {
+            console.log(rsp);
+                if ( rsp.success ){ //인증 성공 시
+                    alert("인증 성공하였습니다.");
+                    hPhoneCheck.value = "yes";
+                    phoneNumber.readOnly = true;
+                    return;
+                } else { //인증 실패 시
+                    alert("인증 실패하였습니다.");
+                    hPhoneCheck.value = "no";
+                    return;
+                }
+            });
+        }
+    </script>
+
+##### ✏ "Import 휴대폰 본인인증 API"사용, node.js + jquery 형식이었지만 JS형식으로 변경 / '인증하기' 버튼 클릭시 KG이니시스 휴대폰 인증 팝업창으로 이동 후 인증을 진행, 인증 성공시 hPhoneCheck = "yes"로 변경
+
+#### 📎유효성 검사 (emailId만)
+	let emailId = f.emailId.value; //Email
+	let emailKey = document.getElementById("emailKey").value; //인증번호
+	let hEmailCheck = document.getElementById("hEmailCheck").value; //인증확인
+	...
+	//ID
+	if ( emailId == '' ) {
+		alert("아이디를 입력하세요");
+		return;
+	}
+	//인증번호
+	if ( emailKey == '' ) {
+		alert("인증번호를 확인해주세요");
+		return;
+	}
+	//인증번호 확인
+		if ( hEmailCheck != "true" ) {
+		alert("인증번호를 확인해주세요");
+		return;
+	}
+	...
+	
+##### ✏ 입력한 정보들의 유효성 검사를 진행한다. 회원가입시 빈칸이 없고, 중복체크 및 형식을 따르지 않았다면 가입이 되지 않도록 한다. \n emailId는 이메일 형식이 지켜지고, 인증번호 확인을 진행했는지 확인\n pwd는 형식이 지켜지고 비밀번호 확인과 일치하는지 확인\n 이외에는 입력했는지, 중복체크확인을 했는지 확인을 하는 과정을 진행한 후 가입을 진행하도록 한다. 
