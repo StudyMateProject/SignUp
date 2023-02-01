@@ -233,4 +233,4 @@
     @Transactional // UPDATE / DELETE 를 사용할 때 필요한 어노테이션
     int findChangePwd(@Param("emailId") String emailId, @Param("pwd") String pwd);
 ##### ✏ 비밀번호 재설정을 위해서 아이디(emailId)값을 전페이지에서 전달받고, 그 아이디에 해당하는 비밀번호를 변경할 수 있도록 한다. @Query에서 UPDATE 쿼리문을 작성하기에 @Modifying + @Transactional 어노테이션도 작성해 주어야 한다. @Modifying는 INSERT / UPDATE / DELETE 를 사용할 때 필요한 어노테이션이고,  @Transactional는 UPDATE / DELETE 를 사용할 때 필요한 어노테이션이다. 또한 UPDATE를 쓰면 반환값은 int로 하도록한다. 
-######❗@Query -> 쿼리문은 ':'을 쓰거나 추가 어노테이션을 사용해야한다. 이와 관련된 문법을 알아봐야 할듯❗
+#####❗@Query -> 쿼리문은 ':'을 쓰거나 추가 어노테이션을 사용해야한다. 이와 관련된 문법을 알아봐야 할듯❗
