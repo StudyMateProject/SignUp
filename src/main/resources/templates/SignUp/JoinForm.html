@@ -8,26 +8,43 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="/js/httpRequest.js"></script>
     <script>
-        function btnPhoneCheck(){
-            let hPhoneCheck = document.getElementById("hPhoneCheck");
+        function phoneCheck(){
             let phoneNumber = document.getElementById("phoneNumber");
-            var IMP = window.IMP; //init로 객체초기화(가맹점식별코드)
-            IMP.init(""); //가맹점 번호
-            IMP.certification({
-                popup : true
-            } ,function (rsp) {
-            console.log(rsp);
-                if ( rsp.success ){ //인증 성공 시
-                    alert("인증 성공하였습니다.");
-                    hPhoneCheck.value = "yes";
-                    phoneNumber.readOnly = true;
+
+            let url = "/joinform/phonecheck";
+            let param = "phoneNumber=" + phoneNumber;
+            sendRequest(url, param, resultPhoneCheck, "POST");
+        }
+
+        function resultPhoneCheck() {
+            if ( xhr.readyState == 4 && xhr.status == 200 ) {
+                let hPhoneCheck = document.getElementById("hPhoneCheck");
+                let phoneNumber = document.getElementById("phoneNumber");
+                let hPhone = document.getElementById("phoneNumber");
+                let data = xhr.responseText; //중복확인한 핸드폰 번호 값
+
+                if ( data == "no" ) {
+                    alert("이미 가입되어 있는 핸드폰 번호입니다.");
                     return;
-                } else { //인증 실패 시
-                    alert("인증 실패하였습니다.");
-                    hPhoneCheck.value = "no";
-                    return;
-                }
-            });
+                } else {
+                    alert("사용가능한 핸드폰 번호입니다.\n 휴대폰 인증을 진행해주세요");
+                    var IMP = window.IMP; //init로 객체초기화(가맹점식별코드)
+                    IMP.init(""); //가맹점 번호
+                    IMP.certification({
+                        popup : true
+                    } ,function (rsp) {
+                        if ( rsp.success ){ //인증 성공 시
+                            alert("인증 성공하였습니다.");
+                            hPhoneCheck.value = "yes";
+                            return;
+                        } else { //인증 실패 시
+                            alert("인증 실패하였습니다.");
+                            hPhoneCheck.value = "data";
+                            return;
+                        } //if/else
+                    }); //function (rsp)
+                } //else
+            } //if
         }
     </script>
 </head>
@@ -38,6 +55,7 @@
         <input id="hEmailCheck" type="text">
         <input id="hEmailKey" type="text">
         <input id="hNickname" type="text">
+        <input id="hPhone" type="text">
         <input id="hPhoneCheck" type="text">
         <ul>
             <li><label>아이디 </label><input th:field="*{emailId}" type="text">
@@ -62,7 +80,7 @@
                                    <label>여</label><input th:field="*{gender}" type="radio" value="W"></li>
 
             <li><label>휴대전화 </label><input th:field="*{phoneNumber}" type="tel">
-                <input id="btnPhone" value="인증하기" type="button" onclick="btnPhoneCheck()"></li>
+                <input id="btnPhone" value="인증하기" type="button" onclick="phoneCheck()"></li>
 
             <li><label>주소 </label><input th:field="*{address}" type="text">
             <input id="btnAddress" type="button" value="주소찾기"></li>
@@ -96,7 +114,7 @@
             let pattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
 
             if( !pattern.test(emailId) ) {
-                alert("이메일 형식을 다시 확인해주세요\n ex) abc@nvaer.com");
+                alert("이메일 형식을 다시 확인해주세요\n ex) abc@naver.com");
                 return;
             } else {
                 let url = "/joinform/emailcheck";
@@ -177,7 +195,7 @@
         }
     </script>
     <script>
-    //비밀번호 형식 제한
+        //비밀번호 형식 제한
         function pwdCheck(f) {
             let pwd = f.pwd.value;
             let pwdText1 = document.getElementById("pwdText1");
@@ -230,8 +248,6 @@
     </script>
     <script>
         function join(f) {
-            //유효성검사 통과정보
-            let success = "yes";
             //입력한 정보들
             //emailId
             let emailId = f.emailId.value; //Email
@@ -280,10 +296,7 @@
             //ID
             if ( emailId == '' ) {
                 alert("아이디를 입력하세요");
-                success = "no";
                 return;
-            } else {
-                success = "yes";
             }
             //인증번호
             if ( emailKey == '' ) {
@@ -358,6 +371,12 @@
             //hPhoneCheck
             if ( hPhoneCheck != "yes" ) {
                 alert("핸드폰 인증을 확인해 주세요");
+                return;
+            }
+
+            //hPhone
+            if ( hPhone != phoneNumber ) {
+                alert("휴대폰 인증이 되지 않았습니다. 인증을 진행해 주세요");
                 return;
             }
 

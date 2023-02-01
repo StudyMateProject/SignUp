@@ -106,4 +106,63 @@ public class Member {
                     .build();
         }
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @ToString
+    public static class rqFindId {
+        private String name;
+        private String phoneNumber;
+
+        public Member toEntity() {
+            return Member.builder()
+                    .name(name)
+                    .phoneNumber(phoneNumber)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @ToString
+    public static class rqFindPwd {
+        private String emailId;
+        private String name;
+        private String phoneNumber;
+
+        public Member toEntity() {
+            return Member.builder()
+                    .emailId(emailId)
+                    .name(name)
+                    .phoneNumber(phoneNumber)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @ToString
+    public static class rqResetPwd {
+        private String emailId;
+        private String pwd;
+
+        public Member toEntity(PasswordEncoder passwordEncoder){
+            String enPassword = passwordEncoder.encode(pwd);
+            //비밀번호 암호화
+            return Member.builder()
+                    .emailId(emailId)
+                    .pwd(enPassword)
+                    .build();
+        }
+    }
+
 }

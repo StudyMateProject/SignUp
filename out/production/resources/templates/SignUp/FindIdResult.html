@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ID 찾기 결과</title>
+</head>
+<body>
+    <h2 th:text="'ID는 ' + ${emailId} + '입니다.'"></h2>
+    <input value="메인 페이지로 이동" type="button" onclick="location.href='/'">
+    <input value="로그인 페이지로 이동" type="button" onclick="location.href='/loginform'">
+</body>
+</html>

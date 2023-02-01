@@ -1,10 +1,57 @@
 <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>아이디 찾기</title>
 </head>
 <body>
+    <h2>아이디 찾기</h2>
+    <form action="/loginform/findidform" method="post" th:object="${memberDTO}">
+        <input type="text" id="hEmailId">
+        <ul>
+            <li><label>이름</label><input th:field="*{name}" type="text"></li>
+            <li><label>핸드폰번호</label><input th:field="*{phoneNumber}" type="text"></li>
+        </ul>
+        <input type="button" value="아이디 찾기" onclick="findId(this.form)">
+        <input type="button" value="취소하기" onclick="location.href='/loginform'">
+    </form>
+    <script src="/js/httpRequest.js"></script>
+<script>
+    function findId(f) {
+        let name = f.name.value;
+        let phoneNumber = f.phoneNumber.value;
 
+        //이름
+        if ( name == '' ) {
+            alert("이름을 입력하세요");
+            return;
+        }
+        //phoneNumber
+        if ( phoneNumber == '' ) {
+            alert("핸드폰 번호를 입력하세요");
+            return;
+        }
+
+        let url = "/loginform/findidform/findid";
+        let param = "name=" + name +
+                    "&phoneNumber=" + phoneNumber;
+        sendRequest(url, param, resultFindId, "POST");
+    }
+
+    function resultFindId() {
+        if ( xhr.readyState == 4 && xhr.status == 200 ) {
+            let data = xhr.responseText;
+
+            if ( data == "no" ) {
+                alert("입력하신 정보로 가입된 아이디가 없습니다.\n입력하신 정보를 다시 확인해 주세요.");
+                return;
+            } else {
+                location.href = "/loginform/findidform/checkid?emailId=" + data;
+            }
+
+        }
+    }
+</script>
 </body>
 </html>
