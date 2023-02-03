@@ -83,13 +83,11 @@
             let url = "/loginform/findpwdform/resetpwdform/resetpwd";
             let param = "emailId=" + emailId +
                         "&pwd=" + pwd;
-            console.log(param);
             sendRequest(url, param, ResultResetPwd, "POST");
         }
 
         function ResultResetPwd () {
             if ( xhr.readyState == 4 && xhr.status == 200 ) {
-                console.log("들어왔나?");
                 let data = xhr.responseText;
                 location.href = "/loginform";
             }

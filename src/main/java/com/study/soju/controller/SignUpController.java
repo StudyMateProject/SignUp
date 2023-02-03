@@ -7,10 +7,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -70,6 +67,21 @@ public class SignUpController {
         signUpService.loadUserByUsername(emailId);
         return "Main";
     }
+
+    //네이버 로그인 API 콜백
+    @GetMapping("/loginform/naverlogincallback")
+    public String naverCallback(Model model) {
+        model.addAttribute("memberDTO", new Member.rqJoinSocial());
+        return "SignUp/NaverLoginCallback";
+    }
+
+    //네이버 로그인 추가정보 입력 페이지 이동
+    @PostMapping("/loginform/loginauthentication")
+    public String loginAuthentication(Member.rqJoinSocial rqJoinSocial, Model model) {
+        model.addAttribute("memberDTO", rqJoinSocial);
+        return "SignUp/NaverJoin";
+    }
+
 
     //////////////////////ID찾기//////////////////////
 
@@ -136,4 +148,5 @@ public class SignUpController {
         signUpService.resetPwd(rqResetPwd, passwordEncoder);
         return "SignUp/LoginForm";
     }
+
 }

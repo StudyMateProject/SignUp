@@ -19,7 +19,7 @@ public class Member {
     @Column(length = 50)
     private String emailId;
 
-    @Column(length = 255, nullable = false)
+    @Column(length = 255)
     private String pwd;
 
     @Column(length = 10, nullable = false)
@@ -92,6 +92,45 @@ public class Member {
             return Member.builder()
                     .emailId(emailId)
                     .pwd(enPassword)
+                    .name(name)
+                    .nickname(nickname)
+                    .birthday(birthday)
+                    .gender(gender)
+                    .phoneNumber(phoneNumber)
+                    .address(address + " " + detailAddress)
+                    .studyType(studyType)
+                    .platform(platform)
+                    .roleName(roleName)
+                    .profileImage("no_file")
+                    .achievement("신입생")
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @ToString
+    public static class rqJoinSocial {
+        private String emailId;
+        private String name;
+        private String nickname;
+        private String birthday;
+        private String gender;
+        private String phoneNumber;
+        private String address;
+        private String studyType;
+        private String platform;
+        private String roleName;
+        private String detailAddress;
+
+        //DTO를 Entity로 변환
+        public Member toEntity() {
+            //변환된 Entity반환
+            return Member.builder()
+                    .emailId(emailId)
                     .name(name)
                     .nickname(nickname)
                     .birthday(birthday)

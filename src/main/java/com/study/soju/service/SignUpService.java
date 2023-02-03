@@ -21,13 +21,18 @@ public class SignUpService implements UserDetailsService {
     @Autowired
     MemberRepository memberRepository;
 
-    //회원가입
-    public void joinMember(Member.rqJoinMember rqJoinMember, PasswordEncoder passwordEncoder){
+    //////////////////////회원가입//////////////////////
+    public void joinMember(Member.rqJoinMember rqJoinMember, PasswordEncoder passwordEncoder) {
         //DTO > Entity + 암호화 메서드
         Member joinMember = rqJoinMember.toEntity(passwordEncoder);
         //변환된 Entity DB에 저장 & 받아옴
         memberRepository.save(joinMember);
     }
+
+//    //소셜 통합 인증
+//    public void joinMemberNaver(Member.rqJoinSocial rqJoinSocial) {
+//        Member joinMemberNaver = rqJoinSocial.toEntity();
+//    }
 
     //아이디 중복체크
     public String checkEmailId(String emailId) {

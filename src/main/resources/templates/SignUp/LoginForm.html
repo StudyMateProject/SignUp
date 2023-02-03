@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>로그인</title>
+    <meta name="google-signin-client_id" content="-6t8ghsdrabmgh8vfsnimpofjnmmgcocn.apps.googleusercontent.com">
 </head>
 <body>
     <form action="/loginform/login" method="post">
@@ -18,6 +19,34 @@
         <input name="btnJoin" type="button" value="회원가입" onclick="location.href='/joinform'">
         <input name="btnFindId" type="button" value="아이디 찾기" onclick="location.href='/loginform/findidform'">
         <input name="btnFindPwd" type="button" value="비밀번호 찾기" onclick="location.href='/loginform/findpwdform'">
+        <div class="naver" id="naverIdLogin"></div>
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
     </form>
+    <!--JS----------------------------------------------------------------------------------------------------------------->
+    <script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
+    <script>
+        const naverLogin = new naver.LoginWithNaverId(
+            {
+                clientId: "", // 네이버에서 발급받은 API 사용 ID
+			    callbackUrl: "http://localhost:8888/loginform/naverlogincallback", // 로그인을 하고 정보동의 후 이동할 페이지 - 네이버에서 미리 등록해야한다.
+			    loginButton: {color: "green", type: 3, height: 40}, // 위에 작성한 <div>태그에 만들어줄 로그인 버튼 모양 설정
+			    isPopup: false, // callbackUrl을 팝업창으로 열건지 선택 - true : 팝업 / false : 다음 페이지
+			    callbackHandle: true // 콜백메소드에 핸들메소드 사용여부
+			}
+        );
+        naverLogin.init();
+    </script>
+    <!---GoogleAPI--------------------------------------------------------------------------------------------------------->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script>
+        function onSignIn(googleUser) {
+            let profile = googleUser.getBasicProfile();
+            console.log(profile);
+            console.log('NAME : ' + profile.getName());
+            console.log('ID : ' + profile.getId());
+            console.log('Image URL : ' + profile.getImageUrl());
+            console.log('Email : ' + profile.getEmail());
+        }
+    </script>
 </body>
 </html>
