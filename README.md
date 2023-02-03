@@ -12,7 +12,8 @@
 
 #### 📌 로그인
 ##### ✔ 네이버 / 카카오 로그인 API
-####   
+
+#
 
 ### 🧩 01/24 : DB Table 생성 및 로그인 및 회원가입 폼 제작
 
@@ -39,7 +40,8 @@
 ##### ✏ 회원가입을 진행하면, DB에 정보가 저장되고 저장된 정보를 바탕으로 로그인 기능 (아이디 존재 여부, 비밀번호 일치 확인) 구현 이때, 비밀번호는 Spring Framework중 하나인 PasswordEncoder를 이용하여 Hash값으로 암호화하여 DB에 저장하도록 한다. 또한, 로그인시 입력하면 이를 같은 방식으로 암호화하여 비교해 일치/불일치를 판별한다.
 
 ##### ✏ Spring Security로 회원가입 시 권한을 부여하고(USER or ADIM / 회원가입시 일반 이용자는 모두 USER 권한 부여), 접속이 가능한 경로를 지정해준다. 로그인에 대한 기능도 response 기능을 필요로 하지 않고 Security에서 처리해준다. 또한, 개인의 세션을 관리해주며, 자동로그인 등의 설정도 가능하다.
-###
+
+#
 
 ### 🧩 01/25 : 회원가입시 아이디 중복체크 & 이메일 인증 번호 전송
 
@@ -121,7 +123,8 @@
 	}
 
 ##### ✏ 입력한 값 : nickname 을 사용 가능하다면 data값(=true) 이미 있는 닉네임 값이라면 false를 대입
-###
+
+#
 
 ### 🧩 01/26 : 비밀번호 & 닉네임 형식 제한, 주소 API
 
@@ -158,6 +161,8 @@
 #### 📎 주소 API
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 ##### ✏ 다음(카카오) 주소 API사용, 주소 입력 Textbox 혹은 '주소찾기' 버튼 클릭 시 주소 검색할 수 있는 팝업창 생성, 상세주소 입력시 DTO에서 DB에 '주소 + 상세주소'로 저장되도록 하게함
+
+#
 
 ### 🧩 01/30 : 휴대폰 인증 API & 유효성 검사
 
@@ -213,4 +218,26 @@
 	}
 	...
 	
-##### ✏ 입력한 정보들의 유효성 검사를 진행한다. 회원가입시 빈칸이 없고, 중복체크 및 형식을 따르지 않았다면 가입이 되지 않도록 한다. \n emailId는 이메일 형식이 지켜지고, 인증번호 확인을 진행했는지 확인\n pwd는 형식이 지켜지고 비밀번호 확인과 일치하는지 확인\n 이외에는 입력했는지, 중복체크확인을 했는지 확인을 하는 과정을 진행한 후 가입을 진행하도록 한다. 
+##### ✏ 입력한 정보들의 유효성 검사를 진행한다. 회원가입시 빈칸이 없고, 중복체크 및 형식을 따르지 않았다면 가입이 되지 않도록 한다. emailId는 이메일 형식이 지켜지고, 인증번호 확인을 진행했는지 확인 pwd는 형식이 지켜지고 비밀번호 확인과 일치하는지 확인\n 이외에는 입력했는지, 중복체크확인을 했는지 확인을 하는 과정을 진행한 후 가입을 진행하도록 한다. 
+
+#
+
+### 🧩 02/01 : 회원가입 완료 & ID찾기 & PW 재설정
+
+#### 📎 ID 찾기
+    @Query("SELECT m.emailId FROM Member m WHERE m.name = :name AND m.phoneNumber = :phoneNumber")
+    String findEmailId(@Param("name") String name, @Param("phoneNumber") String phoneNumber);
+##### ✏ ID를 찾기 위해서 '이름(name)' '핸드폰 번호(phoneNumber)'을 입력받으면 MemberRepsitory에서 @Query어노테이션을 활용해서 name과 phoneNumber가 모두 일치하는 emailId를 반환하고 이를 다음페이지("이메일 찾기 결과 페이지")로 보내 확인할 수 있도록 한다.
+
+#### 📎 PWD 재설정을 위한 조건 확인
+    @Query("SELECT m.emailId FROM Member m WHERE m.emailId = :emailId AND m.phoneNumber = :phoneNumber AND  m.name = :name")
+    String findPwd(@Param("emailId") String emailId, @Param("name") String name, @Param("phoneNumber") String phoneNumber);
+##### ✏ PWD를 재설정하기 위해서는 이메일(emailId)를 입력하고, 위에서 진행했던 인증번호 확인 과정을 거치고 '이름(name)' '핸드폰 번호(phoneNumber)'를 입력받아 해당하는 정보로 가입된 유저가 있는지 먼저 확인한다. 비밀번호값을 전달하기에는 보안상 문제가 생길 가능성이 있으므로 아이디값을 전달해서 유저만 있는지 확인한다. 이후에 모든 정보가 일치하는 유저가 있고, 이메일 인증을 받았다면, 비밀번호 재설정 페이지로 이동한다. 
+
+#### 📎 PWD 재설정
+    @Query("UPDATE Member m SET m.pwd = :pwd WHERE m.emailId = :emailId")
+    @Modifying // INSERT / UPDATE / DELETE 를 사용할 때 필요한 어노테이션
+    @Transactional // UPDATE / DELETE 를 사용할 때 필요한 어노테이션
+    int findChangePwd(@Param("emailId") String emailId, @Param("pwd") String pwd);
+##### ✏ 비밀번호 재설정을 위해서 아이디(emailId)값을 전페이지에서 전달받고, 그 아이디에 해당하는 비밀번호를 변경할 수 있도록 한다. @Query에서 UPDATE 쿼리문을 작성하기에 @Modifying + @Transactional 어노테이션도 작성해 주어야 한다. @Modifying는 INSERT / UPDATE / DELETE 를 사용할 때 필요한 어노테이션이고,  @Transactional는 UPDATE / DELETE 를 사용할 때 필요한 어노테이션이다. 또한 UPDATE를 쓰면 반환값은 int로 하도록한다. 
+###### ❗@Query -> 쿼리문은 ':'을 쓰거나 추가 어노테이션을 사용해야한다. 이와 관련된 문법을 알아봐야 할듯❗
