@@ -241,3 +241,29 @@
     int findChangePwd(@Param("emailId") String emailId, @Param("pwd") String pwd);
 ##### ✏ 비밀번호 재설정을 위해서 아이디(emailId)값을 전페이지에서 전달받고, 그 아이디에 해당하는 비밀번호를 변경할 수 있도록 한다. @Query에서 UPDATE 쿼리문을 작성하기에 @Modifying + @Transactional 어노테이션도 작성해 주어야 한다. @Modifying는 INSERT / UPDATE / DELETE 를 사용할 때 필요한 어노테이션이고,  @Transactional는 UPDATE / DELETE 를 사용할 때 필요한 어노테이션이다. 또한 UPDATE를 쓰면 반환값은 int로 하도록한다. 
 ###### ❗@Query -> 쿼리문은 ':'을 쓰거나 추가 어노테이션을 사용해야한다. 이와 관련된 문법을 알아봐야 할듯❗
+
+#
+
+### 🧩 02/03 : 소셜로그인 API 구현중 ( Naver / Google )
+
+#### 📎 Naver 로그인 API
+	<script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
+    	<script>
+        	const naverLogin = new naver.LoginWithNaverId(
+            	{
+                	clientId: "", // 네이버에서 발급받은 API 사용 ID
+			    	callbackUrl: "http://localhost:8888/loginform/naverlogincallback", // 로그인을 하고 정보동의 후 이동할 페이지 - 네이버에서 미리 등록해야한다.
+			    	loginButton: {color: "green", type: 3, height: 40}, // 위에 작성한 <div>태그에 만들어줄 로그인 버튼 모양 설정
+			    	isPopup: false, // callbackUrl을 팝업창으로 열건지 선택 - true : 팝업 / false : 다음 페이지
+			    	callbackHandle: true // 콜백메소드에 핸들메소드 사용여부
+				}
+        	);
+        naverLogin.init();
+    </script>
+##### ✏ 네이버는 Callback html파일을 생성해서 정보를 넘겨줄 수 있다. "이름 / 이메일(emailId) / 성별 / 생일 / 핸드폰번호"를 넘겨받을 수 있으며, 이외의 정보는 추가 입력하도록 한다.
+
+#### 📎 Google 로그인 API
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+##### ✏ 이 스크립트만 호출해 주면 콜백페이지 없이도 전달해준다. 대신에, OAuth설정을 해주어야한다.
+
+###### ❗소셜 API 사용을 해 로그인 / 회원가입을 진행할 경우 Security부분에서 OAuth설정을 알아보고 진행해야 할듯❗
