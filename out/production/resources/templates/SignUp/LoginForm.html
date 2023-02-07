@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>로그인</title>
-    <meta name="google-signin-client_id" content="826440518994-6t8ghsdrabmgh8vfsnimpofjnmmgcocn.apps.googleusercontent.com">
+    <meta name="google-signin-client_id" content="-6t8ghsdrabmgh8vfsnimpofjnmmgcocn.apps.googleusercontent.com">
 </head>
 <body>
     <form action="/loginform/login" method="post">
@@ -27,7 +27,7 @@
     <script>
         const naverLogin = new naver.LoginWithNaverId(
             {
-                clientId: "O6Ia5cRtqbBq7SKu1wwd", // 네이버에서 발급받은 API 사용 ID
+                clientId: "", // 네이버에서 발급받은 API 사용 ID
 			    callbackUrl: "http://localhost:8888/loginform/naverlogincallback", // 로그인을 하고 정보동의 후 이동할 페이지 - 네이버에서 미리 등록해야한다.
 			    loginButton: {color: "green", type: 3, height: 40}, // 위에 작성한 <div>태그에 만들어줄 로그인 버튼 모양 설정
 			    isPopup: false, // callbackUrl을 팝업창으로 열건지 선택 - true : 팝업 / false : 다음 페이지

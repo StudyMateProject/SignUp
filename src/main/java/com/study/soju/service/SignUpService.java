@@ -29,11 +29,6 @@ public class SignUpService implements UserDetailsService {
         memberRepository.save(joinMember);
     }
 
-//    //소셜 통합 인증
-//    public void joinMemberNaver(Member.rqJoinSocial rqJoinSocial) {
-//        Member joinMemberNaver = rqJoinSocial.toEntity();
-//    }
-
     //아이디 중복체크
     public String checkEmailId(String emailId) {
         Member member = memberRepository.findByEmailId(emailId);
@@ -104,10 +99,11 @@ public class SignUpService implements UserDetailsService {
     //핸드폰번호 중복체크
     public String checkPhone (String phoneNumber) {
         Member member = memberRepository.findByPhoneNumber(phoneNumber);
+        System.out.print(member);
         if ( member != null ) {
             return "no";
         } else {
-            return phoneNumber;
+            return "yes";
         }
     }
 

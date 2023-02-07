@@ -1,5 +1,7 @@
 package com.study.soju.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.study.soju.config.IamPortPass;
 import com.study.soju.entity.Member;
 import com.study.soju.service.SignUpService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -56,8 +60,31 @@ public class SignUpController {
     @PostMapping("/joinform/phonecheck")
     @ResponseBody
     public String checkPhone(String phoneNumber) {
+        System.out.println(phoneNumber);
         String checkPhone = signUpService.checkPhone(phoneNumber);
+        System.out.print(checkPhone);
         return checkPhone;
+    }
+
+    //본인인증 IamPort서버 통신
+    @PostMapping("/joinform/certifications")
+    @ResponseBody
+    public HashMap<String, String> certifications(String impUid) {
+        JsonNode jsonToken = IamPortPass.getToken();
+        System.out.println(jsonToken);
+        String accessToken = jsonToken.get("response").get("access_token").asText();
+
+        JsonNode userInfo = IamPortPass.getUserInfo(impUid, accessToken);
+        System.out.println(userInfo);
+        String birthday = userInfo.get("response").get("birthday").asText();
+        String name = userInfo.get("response").get("name").asText();
+        String phoneNumber = userInfo.get("response").get("phone").asText();
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("birthday", birthday);
+        map.put("name", name);
+        map.put("phoneNumber", phoneNumber);
+        return map;
     }
 
     //////////////////////로그인//////////////////////

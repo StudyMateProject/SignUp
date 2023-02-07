@@ -30,6 +30,10 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	// http client
+	implementation 'org.apache.httpcomponents:httpclient'
+	// http core
+	implementation 'org.apache.httpcomponents:httpcore'
 }
 
 tasks.named('test') {

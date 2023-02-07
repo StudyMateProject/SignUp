@@ -3,58 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>회원가입 페이지</title>
-    <!-- iamport.payment.js -->
-    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <script src="/js/httpRequest.js"></script>
-    <script>
-        function phoneCheck(){
-            let phoneNumber = document.getElementById("phoneNumber");
 
-            let url = "/joinform/phonecheck";
-            let param = "phoneNumber=" + phoneNumber;
-            sendRequest(url, param, resultPhoneCheck, "POST");
-        }
-
-        function resultPhoneCheck() {
-            if ( xhr.readyState == 4 && xhr.status == 200 ) {
-                let hPhoneCheck = document.getElementById("hPhoneCheck");
-                let phoneNumber = document.getElementById("phoneNumber");
-                let data = xhr.responseText; //중복확인한 핸드폰 번호 값
-
-                if ( data == "no" ) {
-                    alert("이미 가입되어 있는 핸드폰 번호입니다.");
-                    return;
-                } else {
-                    alert("사용가능한 핸드폰 번호입니다.\n 휴대폰 인증을 진행해주세요");
-                    var IMP = window.IMP; //init로 객체초기화(가맹점식별코드)
-                    IMP.init("imp88140833"); //가맹점 번호
-                    IMP.certification({
-                        popup : true
-                    } ,function (rsp) {
-                        if ( rsp.success ){ //인증 성공 시
-                            alert("인증 성공하였습니다.");
-                            hPhoneCheck.value = "yes";
-                            return;
-                        } else { //인증 실패 시
-                            alert("인증 실패하였습니다.");
-                            hPhoneCheck.value = data;
-                            return;
-                        }
-                    });
-                }
-            }
-        }
-    </script>
 </head>
 <body>
     <form action="/joinform/join" method="post" th:object="${memberDTO}">
-        <input name="platform" type="hidden" value="Soju">
+        <input name="platform" type="hidden" value="soju">
         <input name="roleName" type="hidden" value="USER">
         <input id="hEmailCheck" type="text">
         <input id="hEmailKey" type="text">
         <input id="hNickname" type="text">
-        <input id="hPhone" type="text">
         <input id="hPhoneCheck" type="text">
         <ul>
             <li><label>아이디(이메일) </label><input th:field="*{emailId}" type="text">
@@ -67,19 +24,19 @@
             <li><label>비밀번호 확인 </label><input id="pwd2" type="password" oninput="pwdCheck2(this.form)"><br></li>
             <li><label id="pwdText2"></label></li>
 
-            <li><label>이름 </label><input th:field="*{name}" type="text"></li>
-
             <li><label>닉네임(별명) </label><input th:field="*{nickname}" type="text">
                 <input type="button" value="중복확인" onclick="checkNickname(this.form)"><br></li>
             <li><label id="nicknameCheck"></label></li>
 
+            <li><label>성별 </label><label>남</label><input th:field="*{gender}" type="radio" value="M">
+                <label>여</label><input th:field="*{gender}" type="radio" value="F"></li>
+
+            <li><label>이름 </label><input th:field="*{name}" type="text"></li>
+
             <li><label>생일 </label><input th:field="*{birthday}" type="date"></li>
 
-            <li><label>성별 </label><label>남</label><input th:field="*{gender}" type="radio" value="M">
-                                   <label>여</label><input th:field="*{gender}" type="radio" value="F"></li>
-
-            <li><label>휴대전화 </label><input th:field="*{phoneNumber}" type="tel">
-                <input id="btnPhone" value="인증하기" type="button" onclick="phoneCheck()"></li>
+            <li><label>휴대전화 </label><input th:field="*{phoneNumber}" type="tel" oninput="autoHyphen1(this)" maxlength="13">
+                <input id="btnPhone" value="인증하기" type="button"></li>
 
             <li><label>주소 </label><input th:field="*{address}" type="text">
             <input id="btnAddress" type="button" value="주소찾기"></li>
@@ -102,10 +59,11 @@
         <input type="button" value="취소하기" onclick="location.href='/login'">
     </form>
 <!--JS----------------------------------------------------------------------------------------------------------------->
-    <!-- Ajax 사용을 위한 js를 추가 -->
+    <!--Ajax사용을 위함-->
     <script src="/js/httpRequest.js"></script>
+
+    <!-- 이메일 중복값 확인 및 인증번호 전송 -->
     <script>
-    //이메일 중복값 확인 및 인증번호 전송
         function sendEmail(f) {
             let emailId = f.emailId.value; //이메일 입력값 가져오기
 
@@ -160,8 +118,38 @@
         }
     </script>
 
+    <!--비밀번호 형식 제한-->
     <script>
-    //닉네임 중복체크 및 글자 수 제한
+        function pwdCheck(f) {
+            let pwd = f.pwd.value;
+            let pwdText1 = document.getElementById("pwdText1");
+
+            let pattern1 = /[0-9]/; // 숫자 입력
+			let pattern2 = /[a-zA-Z]/; // 영어 소문자, 대문자 입력
+			let pattern3 = /[~!@#$%^&*()_+]/; // 특수기호 입력
+
+			if ( !pattern1.test(pwd) || !pattern2.test(pwd) || !pattern3.test(pwd) || pwd.length < 5 ) {
+			    pwdText1.innerHTML = "영문, 숫자, 특수기호(~!@#$%^&*()_+)를 포함하여 5자리 이상으로 구성하여야 합니다";
+			} else {
+			    pwdText1.innerHTML = "";
+			}
+        }
+
+        function pwdCheck2(f) {
+            let pwd = f.pwd.value;
+            let pwd2 = f.pwd2.value;
+            let pwdText2 = document.getElementById("pwdText2");
+
+            if ( pwd2 != pwd ) {
+                pwdText2.innerHTML = "비밀번호가 일치하지 않습니다";
+            } else {
+                pwdText2.innerHTML = "";
+            }
+        }
+    </script>
+
+    <!--닉네임 중복체크 및 글자 수 제한-->
+    <script>
         function checkNickname(f) {
             let nickname = f.nickname.value; //입력한 닉네임 가져오기
             let nicknameCheck = document.getElementById("nicknameCheck");
@@ -192,58 +180,117 @@
              }
         }
     </script>
+
+    <script> //자동하이픈
+        const autoHyphen = (target) => {
+            target.value = target.value  //특정이벤트가 발생하는 태그 -> value값을 설정해주는 태그
+                                 .replace(/[^0-9]/g, '')  //숫자를 제외한 모든 문자 제거
+                                 .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`).replace(/(\-{1,2})$/g, "");
+                                 // 010-****-**** 형식을 위한 정규식 //2번째 replace는 010이후의 숫자를 치면 바로 -가 나오게
+        }
+        function autoHyphen1(input) {
+            var pattern = /(\d{3})(\d{3})(\d{4})/;
+            var formattedPhoneNumber = input.replace(pattern, '$1-$2-$3');
+        }
+    </script>
+
+    <!-- iamport.payment.js 인증 -->
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <!-- 아임포트 본인인증 및 값 삽입 => '인증하기' 버튼 클릭시 -->
     <script>
-        //비밀번호 형식 제한
-        function pwdCheck(f) {
-            let pwd = f.pwd.value;
-            let pwdText1 = document.getElementById("pwdText1");
+        //textbox & 버튼(2개이상)을 누르면 함수가 실행되도록 하는 방법
+        //querySelectorAll로 id값(#id)을 불러와서 배열로 생성, 이후 forEach문을 활용해 각각의 것을 눌렀을 때 실행되게 하도록 한다.
+        let openPort = document.querySelectorAll("#name, #birthday, #phoneNumber, #btnPhone");
+        openPort.forEach(function(element){
+            element.addEventListener("click", function() {
 
-            let pattern1 = /[0-9]/; // 숫자 입력
-			let pattern2 = /[a-zA-Z]/; // 영어 소문자, 대문자 입력
-			let pattern3 = /[~!@#$%^&*()_+]/; // 특수기호 입력
+                var IMP = window.IMP; //init로 객체초기화(가맹점식별코드)
+                IMP.init("imp88140833"); //가맹점 번호
+                IMP.certification({
+                    popup : true
+                } ,function (rsp) {
+                    if ( rsp.success ){ //인증 성공 시
+                        let impUid = rsp.imp_uid;
+                        let url = "/joinform/certifications";
+                        let param = "impUid=" + impUid;
+                        sendRequest(url, param, resultCertifications, "POST");
+                        return;
+                    } else { //인증 실패 시
+                        alert("인증 실패하였습니다.");
+                        return;
+                    }
+                });
+            });
+        });
 
-			if ( !pattern1.test(pwd) || !pattern2.test(pwd) || !pattern3.test(pwd) || pwd.length < 5 ) {
-			    pwdText1.innerHTML = "영문, 숫자, 특수기호(~!@#$%^&*()_+)를 포함하여 5자리 이상으로 구성하여야 합니다";
-			} else {
-			    pwdText1.innerHTML = "";
-			}
+        function resultCertifications () {
+            if ( xhr.readyState == 4 && xhr.status == 200 ) {
+                let data = xhr.responseText;
+                let json = JSON.parse(data); // map으로 받아온 값을 json형태로 가져오는 방법
+
+                let name = document.getElementById("name");
+                let birthday = document.getElementById("birthday");
+                let phoneNumber = document.getElementById("phoneNumber");
+
+                name.value = json.name;
+                name.readOnly = true;
+                birthday.value = json.birthday;
+                birthday.readOnly = true;
+                phoneNumber.value = json.phoneNumber;
+                phoneNumber.readOnly = true;
+
+                let url = "/joinform/phonecheck";
+                let param = "phoneNumber=" + json.phoneNumber;
+                sendRequest(url, param, phoneCheck, "POST");
+            }
         }
 
-        function pwdCheck2(f) {
-            let pwd = f.pwd.value;
-            let pwd2 = f.pwd2.value;
-            let pwdText2 = document.getElementById("pwdText2");
+        function phoneCheck() {
+            if ( xhr.readyState == 4 && xhr.status == 200 ) {
+                let data = xhr.responseText;
+                let name = document.getElementById("name");
+                let birthday = document.getElementById("birthday");
+                let phoneNumber = document.getElementById("phoneNumber");
 
-            if ( pwd2 != pwd ) {
-                pwdText2.innerHTML = "비밀번호가 일치하지 않습니다";
-            } else {
-                pwdText2.innerHTML = "";
+                console.log(data);
+                if( data == "no" ) {
+                    alert("이미 가입된 회원 정보입니다.");
+                    name.value = "";
+                    birthday.value = "";
+                    phoneNumber.value = "";
+                    return;
+                } else {
+                    alert("가입 가능한 회원 정보입니다.");
+                    return;
+                }
             }
         }
     </script>
 
+
+    <!--주소입력 API-->
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
-    //주소 API
-        window.onload = function() {
-            document.getElementById("address").addEventListener("click", function() {
-                new daum.Postcode({
-                    oncomplete: function(data) {
-                        document.getElementById("address").value = data.address;
-                        document.getElementById("detailAddress").focus();
-                    }
-                }).open();
-            });
-            document.getElementById("btnAddress").addEventListener("click", function() {
-                new daum.Postcode({
-                    oncomplete: function(data) {
-                        document.getElementById("address").value = data.address;
-                        document.getElementById("detailAddress").focus();
-                    }
-                }).open();
-            });
-        }
+        document.getElementById("address").addEventListener("click", function() {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    document.getElementById("address").value = data.address;
+                    document.getElementById("detailAddress").focus();
+                }
+            }).open();
+        });
+        document.getElementById("btnAddress").addEventListener("click", function() {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    document.getElementById("address").value = data.address;
+                    document.getElementById("detailAddress").focus();
+                }
+            }).open();
+        });
     </script>
+
+    <!--회원가입 진행 & 유효성 검사-->
     <script>
         function join(f) {
             //입력한 정보들
@@ -275,7 +322,6 @@
 
             //phoneNumber
             let phoneNumber = f.phoneNumber.value; //phoneNumber
-            let hPhoneCheck = document.getElementById("hPhoneCheck").value;
 
             //address
             let address = f.address.value;
@@ -364,11 +410,6 @@
             //phoneNumber
             if ( phoneNumber == '' ) {
                 alert("핸드폰 번호를 입력하세요");
-                return;
-            }
-            //hPhoneCheck
-            if ( hPhoneCheck != "yes" ) {
-                alert("핸드폰 인증을 확인해 주세요");
                 return;
             }
 
