@@ -267,3 +267,84 @@
 ##### ✏ 이 스크립트만 호출해 주면 콜백페이지 없이도 전달해준다. 대신에, OAuth설정을 해주어야한다.
 
 ###### ❗소셜 API 사용을 해 로그인 / 회원가입을 진행할 경우 Security부분에서 OAuth설정을 알아보고 진행해야 할듯❗
+
+#
+
+### 🧩 02/07 : 본인인증 API 구현 완료
+##### ✏ 이전에는 사용자가 핸드폰번호를 입력하고, '본인인증' 버튼을 클릭하면 중복확인 이후 본인인증 API를 통해 본인인증을 하고, 인증여부(성공여부) - hPhoneCheck를 활용하여 성공했다면 ReadOnly를 활용하여 수정이 불가능하게 하도록 했다. 하지만 이는 입력한 핸드폰 번호와 본인인증번호가 달라도 통과된다는 치명적인 단점이 있었기에 이를 해결하기 위해 우리가 활용한 본인인증 API인 'IamPort'에서 사용자가 입력했던 '이름', '생일', '핸드폰번호'를 서버통신을 활용해 가져오는 방법을 채택하였다. API활용 공식문서에는 Node.js를 활용했지만, 이를 순수 JAVA로 변환하는 과정을 거쳤다. 
+
+#### 📎 아임포트 - 인증 정보 조회하기(Node.js) - 출처 : https://docs.iamport.kr/tech/unified-authentication?_gl=1*sz56zs*_ga*MTYyNDEyMTkzMy4xNjczMjYwNzA1*_ga_1FZH1L727R*MTY3NDcyMDgwNC4xNi4xLjE2NzQ3MjA4MzIuMC4wLjA
+	app.use(bodyParser.json());
+	...
+	// "/certifications"에 대한 POST 요청을 처리하는 controller
+	app.post("/certifications", async (request, response) => {
+		const { imp_uid } = request.body; // request의 body에서 imp_uid 추출
+		try {
+			// 인증 토큰 발급 받기
+		  const getToken = await axios({
+			url: "https://api.iamport.kr/users/getToken",
+			method: "post", // POST method
+			headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
+			data: {
+				imp_key: "imp_apikey", // REST API키
+				imp_secret: "" // REST API Secret
+			}
+		});
+		const { access_token } = getToken.data.response; // 인증 토큰
+		...
+		// imp_uid로 인증 정보 조회
+		const getCertifications = await axios({
+			url: \`https://api.iamport.kr/certifications/\${imp_uid}\`, // imp_uid 전달
+			method: "get", // GET method
+			headers: { "Authorization": access_token } // 인증 토큰 Authorization header에 추가
+		});
+		const certificationsInfo = getCertifications.data.response; // 조회한 인증 정보
+		...
+		} catch(e) {
+			console.error(e);
+    	}
+	});
+
+##### ✏ 이를 config파일을 제작하여 토큰값을 받고, 이를 통해서 서버와 통신하는 과정으로 변환하였다. 
+#### 📎'아임포트'서버 통신 config파일 - POST 방식
+	public class IamPortPass {
+    public static JsonNode getToken(){
+        final String RequestUrl = "https://api.iamport.kr/users/getToken";
+
+        final List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("imp_key", "개인 key값"));
+        postParams.add(new BasicNameValuePair("imp_secret", "개인 secret값"));
+
+        final HttpClient client = HttpClientBuilder.create().build();
+        final HttpPost post = new HttpPost(RequestUrl);
+        JsonNode returnJson = null;
+
+        try {
+            post.setEntity(new UrlEncodedFormEntity(postParams));
+            final HttpResponse response = client.execute(post);
+            final int responseCode = response.getStatusLine().getStatusCode();
+
+            System.out.println("\nSending 'POST' request to URL : " + RequestUrl);
+            System.out.println("Post parameters : " + postParams);
+            System.out.println("Response Code : " + responseCode);
+
+            //JSON 형태로 반환값 처리
+            ObjectMapper mapper = new ObjectMapper();
+            returnJson = mapper.readTree(response.getEntity().getContent());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnJson;
+    }
+##### ✏ RequestUrl로 통신할 서버의 링크를 설정하고 postParams에 개인의 key값과 secret을 넣어준다. 이후에 POST방식으로 통신함을 설정해주고, 받아올 정보들을 JSON형식으로 저장할 수 있도록 returnJson를 만들어준다. 서버통신을 시작하고, 토큰을 통해 받은 정보들을 매퍼를 통해 returnJson에 넣어준다. 이후에 컨트롤러에서 받은 정보들을 Map으로 전달하고, JS에서 각각의 정보들을 지정해준 textbox에 value값을 넣어준다. 
+##### ✏ 본인인증 창은 '이름' '생일' '핸드폰번호' '인증하기'를 클릭하면 팝업으로 실행되어야 한다. 
+#### 📎 같은 함수 공유
+	let openPort = document.querySelectorAll("#name, #birthday, #phoneNumber, #btnPhone");
+        openPort.forEach(function(element){ 
+			element.addEventListener("click", function() { 
+			...
+##### ✏ querySelectorAll("#id값")에id값을 넣어줘서 어떤 id값을 가진 버튼 혹은 textbox가 함수를 공유할 것인지 설정해 준 후, forEach를 활용해 클릭시, 함수가 실행될 수 있도록 한다. 
