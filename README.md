@@ -347,4 +347,4 @@
         openPort.forEach(function(element){ 
 			element.addEventListener("click", function() { 
 			...
-##### ✏ querySelectorAll("#id값")에id값을 넣어줘서 어떤 id값을 가진 버튼 혹은 textbox가 함수를 공유할 것인지 설정해 준 후, forEach를 활용해 클릭시, 함수가 실행될 수 있도록 한다. 
+##### ✏ querySelectorAll("#id값")에 id값을 넣어줘서 어떤 id값을 가진 버튼 혹은 textbox가 함수를 공유할 것인지 배열로 설정해 준 후, forEach를 활용해 설정해준 버튼 혹은 텍스트 박스 클릭시, 함수가 실행될 수 있도록 한다. 
