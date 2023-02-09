@@ -348,3 +348,20 @@
 			element.addEventListener("click", function() { 
 			...
 ##### ✏ querySelectorAll("#id값")에 id값을 넣어줘서 어떤 id값을 가진 버튼 혹은 textbox가 함수를 공유할 것인지 배열로 설정해 준 후, forEach를 활용해 설정해준 버튼 혹은 텍스트 박스 클릭시, 함수가 실행될 수 있도록 한다. 
+
+#
+
+### 🧩 02/08 : 구글 서버통신
+##### ✏ 아임포트 서버통신에 이어서, 이전에 계획하였던 Google 로그인 API활용을 위해서 구글 서버와 통신을 하여 사용자의 정보를 받는 작업을 진행하였다. 구글은 아임포트와 다르게 어떤 정보를 받을 것인지, 리다이렉트 URI등을 사이트에서 직접 설정을 해준 후 진행해야한다. => https://console.cloud.google.com/ 이 곳에서 원하는대로 커스터마이징을 해준 후, 클라이언트 아이디와 비밀번호를 생성해준 후, 코드작업을 시작하였다. 구글도 아임포트와 같이 Config파일을 생성해준 후, 위와 같은 방법으로 통신을 진행해주었다. 다른 점은 Controller에서 서버통신을 위한 작업을 진행해주어야 한다는 것이다. 
+
+#### 📎 Google 서버 통신을 위한 작업
+	String googleUrl = "https://accounts.google.com/o/oauth2/v2/auth?" +
+                       "scope=" + "email" + //가져올 정보들
+                       "&access_type=" + "offline" +  //액세스 토큰을 새로고침 할 수 있는지
+                       "&include_granted_scopes=" + "true" + //위에서 설정한 스코프를 요청
+                       "&response_type=" + "code" +  // 요청한 스코프 값들을 받기 위해 승인 코드를 발급
+                       "&state=" + "security_token%3D138r5719ru3e1%26url%3Dhttps://oauth2.example.com/token" + //통신을 유지하는 문자열 값
+                       "&redirect_uri=" + "http://localhost:8888/loginform/googletoken" + //리디렉션 uri
+                       "&client_id=" + "-6t8ghsdrabmgh8vfsnimpofjnmmgcocn.apps.googleusercontent.com"; //client ID
+
+#
