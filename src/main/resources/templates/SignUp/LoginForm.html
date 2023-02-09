@@ -20,8 +20,8 @@
         <input name="btnFindId" type="button" value="아이디 찾기" onclick="location.href='/loginform/findidform'">
         <input name="btnFindPwd" type="button" value="비밀번호 찾기" onclick="location.href='/loginform/findpwdform'">
         <div class="naver" id="naverIdLogin"></div>
-        <div class="g-signin2" data-onsuccess="onSignIn"></div>
     </form>
+    <a th:href="${googleUrl}">구글 로그인</a>
     <!--JS----------------------------------------------------------------------------------------------------------------->
     <script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
     <script>

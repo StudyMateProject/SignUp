@@ -1,19 +1,17 @@
 package com.study.soju.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.study.soju.config.GoogleLogin;
 import com.study.soju.config.IamPortPass;
 import com.study.soju.entity.Member;
 import com.study.soju.service.SignUpService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 @Controller
 public class SignUpController {
@@ -107,6 +105,18 @@ public class SignUpController {
     public String loginAuthentication(Member.rqJoinSocial rqJoinSocial, Model model) {
         model.addAttribute("memberDTO", rqJoinSocial);
         return "SignUp/NaverJoin";
+    }
+
+    //구글 서버 통신
+    @GetMapping("/loginform/googletoken")
+    public String googleToken(String code) {
+        JsonNode jsonToken = GoogleLogin.getAccessToken(code);
+        String accessToken = jsonToken.get("access_token").asText();
+
+        JsonNode userInfo = GoogleLogin.getUserInfo(accessToken);
+        String emailId = userInfo.get("email").asText();
+        System.out.print(userInfo);
+        return "SignUp/LoginForm";
     }
 
 
