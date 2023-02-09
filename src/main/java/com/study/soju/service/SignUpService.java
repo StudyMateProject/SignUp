@@ -21,7 +21,8 @@ public class SignUpService implements UserDetailsService {
     @Autowired
     MemberRepository memberRepository;
 
-    //////////////////////회원가입//////////////////////
+    ////////////////////////////////////////////////회원가입////////////////////////////////////////////////
+    //회원가입
     public void joinMember(Member.rqJoinMember rqJoinMember, PasswordEncoder passwordEncoder) {
         //DTO > Entity + 암호화 메서드
         Member joinMember = rqJoinMember.toEntity(passwordEncoder);
@@ -107,7 +108,7 @@ public class SignUpService implements UserDetailsService {
         }
     }
 
-    //////////////////////로그인//////////////////////
+    ////////////////////////////////////////////////로그인////////////////////////////////////////////////
     //로그인
     @Override
     public UserDetails loadUserByUsername(String emailId) throws UsernameNotFoundException {
@@ -125,7 +126,7 @@ public class SignUpService implements UserDetailsService {
                 .build();
     }
 
-    //////////////////////ID찾기//////////////////////
+    ////////////////////////////////////////////////ID찾기////////////////////////////////////////////////
     //ID찾기
     public String findIdSearch(Member.rqFindId rqFindId){
         Member member = rqFindId.toEntity();
@@ -137,8 +138,8 @@ public class SignUpService implements UserDetailsService {
         }
     }
 
-    //////////////////////PWD찾기(재설정)//////////////////////
-    //비밀번호 재설정 인증메일
+    ////////////////////////////////////////////////PWD찾기(재설정)////////////////////////////////////////////////
+    //비밀번호 재설정 전, 본인인증 메일 전송
     public String pwdEmailCheck(String emailId){
         Member member = memberRepository.findByEmailId(emailId);
         if( member == null ) {
@@ -206,6 +207,7 @@ public class SignUpService implements UserDetailsService {
         }
     }
 
+    //PWD 재설정
     public void resetPwd(Member.rqResetPwd rqResetPwd, PasswordEncoder passwordEncoder){
         Member member = rqResetPwd.toEntity(passwordEncoder);
         memberRepository.findChangePwd(member.getEmailId(), member.getPwd());

@@ -1,5 +1,6 @@
 package com.study.soju.config;
 
+import com.study.soju.service.SignUpOAuthService;
 import com.study.soju.service.SignUpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
@@ -39,6 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     SignUpService signUpService; // UserDetailsService를 implements한 서비스
                                  // Remember me에서 시스템에 있는 사용자 계정을 조회할때 사용할 서비스
                                  // 로그인 인증 방식을 변경할 서비스
+    @Autowired
+    SignUpOAuthService signUpOAuthService;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -99,6 +102,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     }
                 })
                 .permitAll(); // 사용자 정의 로그인 페이지 접근 권한 승인
+
+        http
+                .oauth2Login()
+                    .userInfoEndpoint()
+                        .userService(signUpOAuthService);
 
         // Remember Me 인증 (자동 로그인)
         http

@@ -27,10 +27,9 @@ public class MainController {
                             "&include_granted_scopes=" + "true" + //위에서 설정한 스코프를 요청
                             "&response_type=" + "code" +  // 요청한 스코프 값들을 받기 위해 승인 코드를 발급
                             "&state=" + "security_token%3D138r5719ru3e1%26url%3Dhttps://oauth2.example.com/token" + //통신을 유지하는 문자열 값
-                            "&redirect_uri=" + "http://localhost:8888/loginform/googletoken" + //리디렉션 uri
+                            "&redirect_uri=" + "http://localhost:8888/loginform/googleauthentication" + //리디렉션 uri
                             "&client_id=" + "826440518994-6t8ghsdrabmgh8vfsnimpofjnmmgcocn.apps.googleusercontent.com"; //client ID
         model.addAttribute("googleUrl", googleUrl);
-
         model.addAttribute("error", error);
         model.addAttribute("errorMsg", errorMsg);
         return "SignUp/LoginForm";

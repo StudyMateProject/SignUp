@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.study.soju.config.GoogleLogin;
 import com.study.soju.config.IamPortPass;
 import com.study.soju.entity.Member;
+import com.study.soju.service.SignUpOAuthService;
 import com.study.soju.service.SignUpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,21 +20,23 @@ public class SignUpController {
     SignUpService signUpService;
 
     @Autowired
+    SignUpOAuthService signUpOAuthService;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
-    //////////////////////회원가입//////////////////////
+    ////////////////////////////////////////////////회원가입////////////////////////////////////////////////
     //회원가입 페이지 이동
     @GetMapping("/joinform")
     public String joinform(Model model) {
-        //바인딩
         model.addAttribute("memberDTO", new Member.rqJoinMember());
         return "SignUp/JoinForm";
     }
 
-    //회원가입 진행
+    //회원가입 진행 (회원정보 저장)
     @PostMapping("/joinform/join")
     public String join(Member.rqJoinMember rqJoinMember) {
-        //Member DTO / 비밀번호 암호화 메서드 전송
+        //Member DTO / 비밀번호 암호화 메서드(passwordEncoder) 전송
         signUpService.joinMember(rqJoinMember, passwordEncoder);
         return "SignUp/LoginForm";  //로그인으로 이동
     }
@@ -42,7 +45,7 @@ public class SignUpController {
     @PostMapping("/joinform/emailcheck")
     @ResponseBody
     public String emailCheck(String emailId) {
-        String checkEmailId =  signUpService.checkEmailId(emailId);
+        String checkEmailId =  signUpService.checkEmailId(emailId); //이메일 존재 여부
         return checkEmailId;
     }
 
@@ -50,7 +53,7 @@ public class SignUpController {
     @PostMapping("/joinform/nicknamecheck")
     @ResponseBody
     public String nicknameCheck(String nickname) {
-        String checkNickname = signUpService.checkNickname(nickname);
+        String checkNickname = signUpService.checkNickname(nickname); //닉네임 존재 여부
         return checkNickname;
     }
 
@@ -58,9 +61,7 @@ public class SignUpController {
     @PostMapping("/joinform/phonecheck")
     @ResponseBody
     public String checkPhone(String phoneNumber) {
-        System.out.println(phoneNumber);
-        String checkPhone = signUpService.checkPhone(phoneNumber);
-        System.out.print(checkPhone);
+        String checkPhone = signUpService.checkPhone(phoneNumber); //핸드폰 번호 존재 여부
         return checkPhone;
     }
 
@@ -68,24 +69,29 @@ public class SignUpController {
     @PostMapping("/joinform/certifications")
     @ResponseBody
     public HashMap<String, String> certifications(String impUid) {
-        JsonNode jsonToken = IamPortPass.getToken();
-        System.out.println(jsonToken);
-        String accessToken = jsonToken.get("response").get("access_token").asText();
+        JsonNode jsonToken = IamPortPass.getToken(); //서버로 부터 토큰값 받아옴 (Json 형식)
+        String accessToken = jsonToken.get("response").get("access_token").asText(); //서버로 부터 토큰값 받아옴 (Text)
 
-        JsonNode userInfo = IamPortPass.getUserInfo(impUid, accessToken);
-        System.out.println(userInfo);
-        String birthday = userInfo.get("response").get("birthday").asText();
-        String name = userInfo.get("response").get("name").asText();
-        String phoneNumber = userInfo.get("response").get("phone").asText();
+        JsonNode userInfo = IamPortPass.getUserInfo(impUid, accessToken); //유저정보 가져옴
+        String birthday = userInfo.get("response").get("birthday").asText(); //userInfo에 들어 있는 생년월일
+        String name = userInfo.get("response").get("name").asText(); //userInfo에 들어 있는 이름
+        String phoneNumber = userInfo.get("response").get("phone").asText(); //userInfo에 들어 있는 핸드폰 번호
 
-        HashMap<String, String> map = new HashMap<>();
+        HashMap<String, String> map = new HashMap<>(); //생년월일 / 이름 / 핸드폰 번호 HashMap으로 만들어 전송
         map.put("birthday", birthday);
         map.put("name", name);
         map.put("phoneNumber", phoneNumber);
-        return map;
+        return map; //map에 정보 저장 후 전송
     }
 
-    //////////////////////로그인//////////////////////
+    //소셜 회원가입
+    @PostMapping("/loginform/socialjoin")
+    public String JoinSocial(Member.rqJoinSocial rqJoinSocial) {
+        signUpOAuthService.JoinSocial(rqJoinSocial);
+        return "SignUp/Loginform";
+    }
+
+    ////////////////////////////////////////////////로그인////////////////////////////////////////////////
     //로그인
     @PostMapping("/loginform/login")
     public String login(@RequestParam(value = "emailId") String emailId) {
@@ -108,20 +114,24 @@ public class SignUpController {
     }
 
     //구글 서버 통신
-    @GetMapping("/loginform/googletoken")
-    public String googleToken(String code) {
+    @GetMapping("/loginform/googleauthentication")
+    public String googleToken(String code, Model model) {
         JsonNode jsonToken = GoogleLogin.getAccessToken(code);
         String accessToken = jsonToken.get("access_token").asText();
 
         JsonNode userInfo = GoogleLogin.getUserInfo(accessToken);
         String emailId = userInfo.get("email").asText();
-        System.out.print(userInfo);
-        return "SignUp/LoginForm";
+
+        Member member = signUpOAuthService.findGoogleUser(emailId);
+        if( member != null ) {
+            return "redirect:/oauth2/authorization/google";
+        }
+        model.addAttribute("emailId", emailId);
+        model.addAttribute("memberDTO", new Member.rqJoinSocial());
+        return "SignUp/GoogleJoin";
     }
 
-
-    //////////////////////ID찾기//////////////////////
-
+    ////////////////////////////////////////////////ID찾기////////////////////////////////////////////////
     //ID 찾기 페이지 이동
     @GetMapping("/loginform/findidform")
     public String findIdForm(Model model) {
@@ -145,7 +155,7 @@ public class SignUpController {
         return "SignUp/FindIdResult";
     }
 
-    //////////////////////PWD찾기(재설정)//////////////////////
+    ////////////////////////////////////////////////PWD찾기(재설정)////////////////////////////////////////////////
 
     //PWD 찾기 이동
     @GetMapping("/loginform/findpwdform")

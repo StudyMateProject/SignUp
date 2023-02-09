@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -128,6 +129,9 @@ public class Member {
 
         //DTO를 Entity로 변환
         public Member toEntity() {
+
+//            String enPassword = passwordEncoder.encode(emailId);
+
             //변환된 Entity반환
             return Member.builder()
                     .emailId(emailId)
@@ -204,4 +208,45 @@ public class Member {
         }
     }
 
+    // OAuth - Google DTO
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    public static class oauthGoogle {
+        private Map<String, Object> attributes;
+        private String nameAttributeKey;
+        private String emailId;
+        private String name;
+        private String platform;
+
+        public Member toEntity() {
+            return Member.builder()
+                    .name(name)
+                    .emailId(emailId)
+                    .platform(platform)
+                    .roleName("USER")
+                    .profileImage("noImage.jpeg")
+                    .build();
+        }
+
+        @Builder
+        public oauthGoogle(Map<String, Object> attributes, String nameAttributeKey, String emailId, String name, String platform) {
+            this.attributes = attributes;
+            this.nameAttributeKey = nameAttributeKey;
+            this.emailId = emailId;
+            this.name = name;
+            this.platform = platform;
+        }
+
+        public static oauthGoogle of(String registrationId, String emailId, Map<String, Object> oAuth2User) {
+            return oauthGoogle.builder()
+                    .attributes(oAuth2User)
+                    .nameAttributeKey(emailId)
+                    .emailId((String) oAuth2User.get("email"))
+                    .name((String) oAuth2User.get("name"))
+                    .platform(registrationId)
+                    .build();
+        }
+    }
 }

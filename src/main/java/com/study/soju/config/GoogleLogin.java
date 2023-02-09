@@ -27,7 +27,7 @@ public class GoogleLogin {
         postParams.add(new BasicNameValuePair("grant_type", "authorization_code"));
         postParams.add(new BasicNameValuePair("client_id", "826440518994-6t8ghsdrabmgh8vfsnimpofjnmmgcocn.apps.googleusercontent.com"));
         postParams.add(new BasicNameValuePair("client_secret", "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"));
-        postParams.add(new BasicNameValuePair("redirect_uri", "http://localhost:8888/loginform/googletoken"));
+        postParams.add(new BasicNameValuePair("redirect_uri", "http://localhost:8888/loginform/googleauthentication"));
         postParams.add(new BasicNameValuePair("code", code));
 
         final HttpClient client = HttpClientBuilder.create().build();
