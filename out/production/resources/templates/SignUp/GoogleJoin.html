@@ -10,20 +10,20 @@
         <input name="roleName" type="hidden" value="USER">
         <input id="hNickname" type="text">
         <ul>
-            <li><label>아이디(이메일) </label><input name="emailId" th:value="${emailId}" type="text"></li>
-
-            <li><label>이름 </label><input th:field="*{name}" type="text"></li>
+            <li><label>아이디(이메일) </label><input name="emailId" th:value="${emailId}" type="text" readonly></li>
 
             <li><label>닉네임(별명) </label><input th:field="*{nickname}" type="text">
                 <input type="button" value="중복확인" onclick="checkNickname(this.form)"><br></li>
             <li><label id="nicknameCheck"></label></li>
 
-            <li><label>생일 </label><input th:field="*{birthday}" type="date"></li>
-
             <li><label>성별 </label><label>남</label><input th:field="*{gender}" type="radio" value="M">
-                <label>여</label><input th:field="*{gender}" type="radio" value="F"></li>
+                                   <label>여</label><input th:field="*{gender}" type="radio" value="F"></li>
 
-            <li><label>휴대전화 </label><input th:field="*{phoneNumber}" type="tel">
+            <li><label>이름 </label><input th:field="*{name}" type="text" readonly></li>
+
+            <li><label>생일 </label><input th:field="*{birthday}" type="date" readonly></li>
+
+            <li><label>휴대전화 </label><input th:field="*{phoneNumber}" type="tel" readonly>
                 <input id="btnPhone" value="인증하기" type="button" onclick="phoneCheck()"></li>
 
             <li><label>주소 </label><input th:field="*{address}" type="text">
@@ -48,8 +48,8 @@
     </form>
     <!--JS----------------------------------------------------------------------------------------------------------------->
     <script src="/js/httpRequest.js"></script>
+    <!--닉네임 중복체크 및 글자 수 제한-->
     <script>
-    //닉네임 중복체크 및 글자 수 제한
         function checkNickname(f) {
             let nickname = f.nickname.value; //입력한 닉네임 가져오기
             let nicknameCheck = document.getElementById("nicknameCheck");
@@ -155,9 +155,9 @@
         }
     </script>
 
+    <!--주소입력 API-->
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
-    //주소 API
         window.onload = function() {
             document.getElementById("address").addEventListener("click", function() {
                 new daum.Postcode({
@@ -178,6 +178,7 @@
         }
     </script>
 
+    <!--회원가입 진행 & 유효성 검사-->
     <script>
         function join(f) {
             //입력한 정보들
@@ -213,10 +214,10 @@
             let roleName = f.roleName.value;
 
             //유효성 검사
-
             //ID
             if ( emailId == '' ) {
-                alert("아이디를 입력하세요");
+                alert("아이디를 불러오지 못했습니다. 구글 로그인 부터 다시 진행해 주세요");
+                location.href = "/loginform";
                 return;
             }
 
@@ -236,6 +237,7 @@
                 alert("닉네임의 길이는 10자 이내입니다.");
                 return;
             }
+            //닉네임 중복확인 여부
             if ( nickname != hNickname ) {
                 alert("닉네임 중복확인을 해주세요");
                 return;

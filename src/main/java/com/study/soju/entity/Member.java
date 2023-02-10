@@ -59,10 +59,9 @@ public class Member {
     @Column(length = 100)
     private String achievement;
 
-////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //DTO
-
     //회원가입 request
     @Getter
     @Setter
@@ -108,6 +107,7 @@ public class Member {
         }
     }
 
+    //소셜 request
     @Getter
     @Setter
     @NoArgsConstructor
@@ -150,6 +150,7 @@ public class Member {
         }
     }
 
+    //ID 찾기 request
     @Getter
     @Setter
     @NoArgsConstructor
@@ -168,6 +169,7 @@ public class Member {
         }
     }
 
+    //ID 찾기 response
     @Getter
     @Setter
     @NoArgsConstructor
@@ -188,6 +190,7 @@ public class Member {
         }
     }
 
+    //PWD 찾기 request
     @Getter
     @Setter
     @NoArgsConstructor
@@ -213,16 +216,18 @@ public class Member {
     @Setter
     @NoArgsConstructor
     @ToString
-    public static class oauthGoogle {
+    public static class oAuthAttributes {
         private Map<String, Object> attributes;
         private String nameAttributeKey;
         private String emailId;
-        private String name;
         private String platform;
+        private String name;
+        private String birthday;
+        private String phoneNumber;
+        private String gender;
 
         public Member toEntity() {
             return Member.builder()
-                    .name(name)
                     .emailId(emailId)
                     .platform(platform)
                     .roleName("USER")
@@ -231,21 +236,54 @@ public class Member {
         }
 
         @Builder
-        public oauthGoogle(Map<String, Object> attributes, String nameAttributeKey, String emailId, String name, String platform) {
-            this.attributes = attributes;
-            this.nameAttributeKey = nameAttributeKey;
-            this.emailId = emailId;
-            this.name = name;
-            this.platform = platform;
+        public oAuthAttributes(Map<String, Object> attributes, String nameAttributeKey, String emailId, String name, String gender, String birthyear, String birthday, String phoneNumber, String platform) {
+            if ( "naver".equals(platform) ) {
+                this.birthday = birthyear + "-" + birthday;
+                this.gender = gender;
+                this.phoneNumber = phoneNumber;
+                this.attributes = attributes;
+                this.nameAttributeKey = nameAttributeKey;
+                this.emailId = emailId;
+                this.platform = platform;
+                this.name = name;
+            } else {
+                this.attributes = attributes;
+                this.nameAttributeKey = nameAttributeKey;
+                this.emailId = emailId;
+                this.platform = platform;
+            }
         }
 
-        public static oauthGoogle of(String registrationId, String emailId, Map<String, Object> oAuth2User) {
-            return oauthGoogle.builder()
-                    .attributes(oAuth2User)
-                    .nameAttributeKey(emailId)
-                    .emailId((String) oAuth2User.get("email"))
-                    .name((String) oAuth2User.get("name"))
+        public static oAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
+            if ( "naver".equals(registrationId) ) {
+                System.out.println("1!!!!!!!!!!!!!!!!!!!!!!!!!" + attributes);
+                return ofNaver(registrationId, userNameAttributeName, attributes);
+            }
+            return ofGoogle(registrationId, userNameAttributeName, attributes);
+        }
+
+        @SuppressWarnings("unchecked")
+        public static oAuthAttributes ofNaver(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
+            Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+            return oAuthAttributes.builder()
+                    .emailId((String) response.get("email"))
+                    .name((String) response.get("name"))
+                    .gender((String) response.get("gender"))
+                    .birthyear((String) response.get("birthyear"))
+                    .birthday((String) response.get("birthday"))
+                    .phoneNumber((String) response.get("mobile"))
                     .platform(registrationId)
+                    .attributes(attributes)
+                    .nameAttributeKey(userNameAttributeName)
+                    .build();
+        }
+
+        public static oAuthAttributes ofGoogle(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
+            return oAuthAttributes.builder()
+                    .emailId((String) attributes.get("email"))
+                    .platform(registrationId)
+                    .attributes(attributes)
+                    .nameAttributeKey(userNameAttributeName)
                     .build();
         }
     }

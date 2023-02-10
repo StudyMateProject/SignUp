@@ -6,7 +6,7 @@
 </head>
 <body>
     <!-- 네이버 회원가입에 미리 작성될 정보들 -->
-    <form id="ff" action="/loginform/loginauthentication" method="POST" th:object="${memberDTO}">
+    <form id="ff" action="/loginform/naverauthentication" method="POST" th:object="${memberDTO}">
         <input th:field="*{name}" type="hidden">
         <input th:field="*{gender}" type="hidden">
         <input th:field="*{emailId}" type="hidden">
@@ -18,7 +18,7 @@
     <script>
         const naverLogin = new naver.LoginWithNaverId(
             {
-                clientId: "", // 네이버에서 발급받은 API 사용 ID
+                clientId: "O6Ia5cRtqbBq7SKu1wwd", // 네이버에서 발급받은 API 사용 ID
 			    isPopup: false, // callbackUrl을 팝업창으로 열건지 선택 - true : 팝업 / false : 다음 페이지
 			    callbackHandle: true // 콜백메소드에 핸들메소드 사용여부
 			}
@@ -39,7 +39,7 @@
 					const birthyear = naverLogin.user.getBirthyear(); // 출생년도
 					const phoneNumber = naverLogin.user.getMobile(); //핸드폰 번호
 
-					// input태그 hidden타입
+					// input 태그 hidden 타입
 					const hName = document.getElementById("name"); // 이름
 					const hGender = document.getElementById("gender"); // 성별
 					const hEmailId = document.getElementById("emailId"); // 이메일

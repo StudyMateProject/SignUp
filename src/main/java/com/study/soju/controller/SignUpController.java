@@ -84,6 +84,18 @@ public class SignUpController {
         return map; //map에 정보 저장 후 전송
     }
 
+    //네이버 로그인 추가정보 입력 페이지 이동
+    @PostMapping("/loginform/naverauthentication")
+    public String loginAuthentication(Member.rqJoinSocial rqJoinSocial, Model model) {
+        Member member = signUpOAuthService.findSocialUser(rqJoinSocial.getEmailId());
+        if( member != null ) {
+            return "redirect:/oauth2/authorization/naver";
+        } else {
+            model.addAttribute("memberDTO", rqJoinSocial);
+            return "SignUp/NaverJoin";
+        }
+    }
+
     //소셜 회원가입
     @PostMapping("/loginform/socialjoin")
     public String JoinSocial(Member.rqJoinSocial rqJoinSocial) {
@@ -106,13 +118,6 @@ public class SignUpController {
         return "SignUp/NaverLoginCallback";
     }
 
-    //네이버 로그인 추가정보 입력 페이지 이동
-    @PostMapping("/loginform/loginauthentication")
-    public String loginAuthentication(Member.rqJoinSocial rqJoinSocial, Model model) {
-        model.addAttribute("memberDTO", rqJoinSocial);
-        return "SignUp/NaverJoin";
-    }
-
     //구글 서버 통신
     @GetMapping("/loginform/googleauthentication")
     public String googleToken(String code, Model model) {
@@ -122,7 +127,7 @@ public class SignUpController {
         JsonNode userInfo = GoogleLogin.getUserInfo(accessToken);
         String emailId = userInfo.get("email").asText();
 
-        Member member = signUpOAuthService.findGoogleUser(emailId);
+        Member member = signUpOAuthService.findSocialUser(emailId);
         if( member != null ) {
             return "redirect:/oauth2/authorization/google";
         }

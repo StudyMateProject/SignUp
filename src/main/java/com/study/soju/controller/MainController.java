@@ -7,13 +7,23 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
+
 @Controller
 public class MainController {
     @Autowired
     SignUpService signUpService;
 
     @GetMapping("/")
-    public String main() {
+    public String main(Principal principal) {
+        if ( principal == null ) {
+            return "redirect:/n";
+        }
+        return "Main";
+    }
+
+    @GetMapping("/n")
+    public String nmain() {
         return "Main";
     }
 

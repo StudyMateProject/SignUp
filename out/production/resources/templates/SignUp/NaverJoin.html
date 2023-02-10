@@ -5,30 +5,28 @@
     <title>Naver 회원가입</title>
 </head>
 <body>
-    <form action="/loginform/joinnaver" method="post" th:object="${memberDTO}">
-        <input name="platform" type="hidden" value="naver">
+    <form method="post" th:object="${memberDTO}">
+        <input name="platform" type="hidden" value="Naver">
         <input name="roleName" type="hidden" value="USER">
         <input id="hNickname" type="text">
-        <input id="hPhone" type="text">
-        <input id="hPhoneCheck" type="text">
         <ul>
             <li><label>아이디(이메일) </label><input th:field="*{emailId}" type="text" readonly></li>
-
-            <li><label>이름 </label><input th:field="*{name}" type="text" readonly></li>
 
             <li><label>닉네임(별명) </label><input th:field="*{nickname}" type="text">
                 <input type="button" value="중복확인" onclick="checkNickname(this.form)"><br></li>
             <li><label id="nicknameCheck"></label></li>
 
-            <li><label>생일 </label><input th:field="*{birthday}" type="date" readonly></li>
-
             <li><label>성별 </label><label>남</label><input th:field="*{gender}" type="radio" value="M" readonly>
-                <label>여</label><input th:field="*{gender}" type="radio" value="F" readonly></li>
+                                   <label>여</label><input th:field="*{gender}" type="radio" value="F" readonly></li>
+
+            <li><label>이름 </label><input th:field="*{name}" type="text" readonly></li>
+
+            <li><label>생일 </label><input th:field="*{birthday}" type="date" readonly></li>
 
             <li><label>휴대전화 </label><input th:field="*{phoneNumber}" type="tel" readonly>
 
             <li><label>주소 </label><input th:field="*{address}" type="text">
-                <input id="btnAddress" type="button" value="주소찾기"></li>
+                                   <input id="btnAddress" type="button" value="주소찾기"></li>
             <li><label>상세주소 </label><input th:field="*{detailAddress}" type="text"></li>
 
             <li><label>관심분야 </label><select th:field="*{studyType}"><option value="">관심분야</option>
@@ -49,8 +47,8 @@
 </form>
     <!--JS----------------------------------------------------------------------------------------------------------------->
     <script src="/js/httpRequest.js"></script>
+    <!--닉네임 중복체크 및 글자 수 제한-->
     <script>
-    //닉네임 중복체크 및 글자 수 제한
         function checkNickname(f) {
             let nickname = f.nickname.value; //입력한 닉네임 가져오기
             let nicknameCheck = document.getElementById("nicknameCheck");
@@ -81,6 +79,8 @@
              }
         }
     </script>
+
+    <!--주소입력 API-->
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
     //주소 API
@@ -103,6 +103,8 @@
             });
         }
     </script>
+
+    <!--회원가입 진행 & 유효성 검사-->
     <script>
         function join(f) {
             //입력한 정보들
@@ -124,7 +126,6 @@
 
             //phoneNumber
             let phoneNumber = f.phoneNumber.value; //phoneNumber
-            let hPhoneCheck = document.getElementById("hPhoneCheck").value;
 
             //address
             let address = f.address.value;
@@ -139,16 +140,17 @@
             let roleName = f.roleName.value;
 
             //유효성 검사
-
             //ID
             if ( emailId == '' ) {
-                alert("아이디를 입력하세요");
+                alert("아이디를 불러오지 못했습니다. 네이버 로그인 부터 다시 진행해 주세요");
+                location.href = "/loginform";
                 return;
             }
 
             //이름
             if ( name == '' ) {
-                alert("이름을 입력하세요");
+                alert("이름을 불러오지 못했습니다. 네이버 로그인 부터 다시 진행해 주세요");
+                location.href = "/loginform";
                 return;
             }
 
@@ -169,7 +171,8 @@
 
             //birthday
             if ( birthday == '' ) {
-                alert("생일을 입력하세요");
+                alert("생일을 불러오지 못했습니다. 네이버 로그인 부터 다시 진행해 주세요");
+                location.href = "/loginform";
                 return;
             }
 
@@ -181,12 +184,8 @@
 
             //phoneNumber
             if ( phoneNumber == '' ) {
-                alert("핸드폰 번호를 입력하세요");
-                return;
-            }
-            //hPhoneCheck
-            if ( hPhoneCheck != "yes" ) {
-                alert("핸드폰 인증을 확인해 주세요");
+                alert("핸드폰 번호를 불러오지 못했습니다. 네이버 로그인 부터 다시 진행해 주세요");
+                location.href = "/loginform";
                 return;
             }
 
@@ -207,7 +206,7 @@
                 return;
             }
 
-            let url = "/joinform/join";
+            let url = "/loginform/socialjoin";
             let param = "emailId=" + emailId +
                         "&name=" + name +
                         "&nickname=" + nickname +

@@ -23,7 +23,7 @@ public class SignUpOAuthService implements OAuth2UserService<OAuth2UserRequest, 
     MemberRepository memberRepository;
 
     //이메일 존재 여부 확인
-    public Member findGoogleUser(String emailId) {
+    public Member findSocialUser(String emailId) {
         Member member = memberRepository.findByEmailId(emailId);
         return member;
     }
@@ -36,20 +36,18 @@ public class SignUpOAuthService implements OAuth2UserService<OAuth2UserRequest, 
 
         String registrationId = userRequest.getClientRegistration()
                 .getRegistrationId(); // 플랫폼 이름값
-        String userNameAttributeName = userRequest.getClientRegistration()
-                .getProviderDetails()
-                .getUserInfoEndpoint()
-                .getUserNameAttributeName(); // oAuth2User에서 sub값에 해당하는 키값
-        String emailId = "email"; // oAuth2User에서 email값에 해당하는 키값
+//        String userNameAttributeName = userRequest.getClientRegistration()
+//                .getProviderDetails()
+//                .getUserInfoEndpoint()
+//                .getUserNameAttributeName(); // oAuth2User에서 sub값에 해당하는 키값
+        String userNameAttributeName = "email"; // oAuth2User에서 email값에 해당하는 키값
 
-        Member.oauthGoogle oauthGoogle = Member.oauthGoogle.of(registrationId, emailId, oAuth2User.getAttributes());
-
-        Member entityMember = oauthGoogle.toEntity();
+        Member.oAuthAttributes oAuthAttributes = Member.oAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+        Member entityMember = oAuthAttributes.toEntity();
         Member member = memberRepository.findByEmailId(entityMember.getEmailId());
-
         return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority(member.getRoleName())),
-                oauthGoogle.getAttributes(),
-                oauthGoogle.getNameAttributeKey());
+                oAuthAttributes.getAttributes(),
+                oAuthAttributes.getNameAttributeKey());
     }
 
     //소셜용 회원가입

@@ -7,7 +7,7 @@
 </head>
 <body>
     <form action="/joinform/join" method="post" th:object="${memberDTO}">
-        <input name="platform" type="hidden" value="soju">
+        <input name="platform" type="hidden" value="Soju">
         <input name="roleName" type="hidden" value="USER">
         <input id="hEmailCheck" type="text">
         <input id="hEmailKey" type="text">
@@ -202,7 +202,7 @@
             element.addEventListener("click", function() {
 
                 var IMP = window.IMP; //init로 객체초기화(가맹점식별코드)
-                IMP.init(""); //가맹점 번호
+                IMP.init("imp88140833"); //가맹점 번호
                 IMP.certification({
                     popup : true
                 } ,function (rsp) {
