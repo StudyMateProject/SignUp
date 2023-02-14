@@ -365,3 +365,30 @@
                        "&client_id=" + "-6t8ghsdrabmgh8vfsnimpofjnmmgcocn.apps.googleusercontent.com"; //client ID
 
 #
+
+### 🧩 02/14 : ID 찾기 / PWD 재설정 소셜 가입자 구분
+##### ✏ Google / Naver로 로그인하기로 회원가입을 한 사용자가 자신이 소셜가입으로 가입했다는 사실을 알려주어야 하고, PWD 재설정은 더욱더 안되게 해야한다. 
+#### 📎 ID찾기 수정
+	public Member.rpFindId findIdSearch(Member.rqFindId rqFindId){
+        Member member = rqFindId.toEntity();
+        Member findEmailId = memberRepository.findEmailId(member.getName(), member.getPhoneNumber());
+        if ( findEmailId == null ) {
+            return null;
+        } else {
+            Member.rpFindId rpFindId = new Member.rpFindId(findEmailId.getEmailId(), findEmailId.getPlatform());
+            return rpFindId;
+        }
+    }
+##### ✏ findEmailId로 SELECT *을 통해서 모든정보를 가져온 후, rpFindId에 EmailId와 Platform값을 DTO에 저장해준 후, 이를 전송해준다. 이와 같은 정보를 js로 넘겨주며, 각각의 값을 json형식에서 추출해주고 전송해 아이디찾기 결과창에서 가입경로도 표시해준다.
+
+#### 📎 PWD재설정 수정
+	public String findPwdSearch(Member.rqFindPwd rqFindPwd){
+        Member member = rqFindPwd.toEntity();
+        Member findByFindPwd = memberRepository.findPwd(member.getEmailId(), member.getName(), member.getPhoneNumber());
+        if ( findByFindPwd.getPlatform() == null ) {
+            return "no";
+        } else {
+            return findByFindPwd.getPlatform();
+        }
+    }
+##### ✏ 이 또한 SELECT *로 모든 정보를 추출해준 후, 플랫폼 정보를 전송해, js에서 no / Soju / Google / Naver를 판별해서 Soju로 가입한 것이 아니라면, 비밀번호 재설정이 안되게하고 alert로 가입경로를 알려준다.
