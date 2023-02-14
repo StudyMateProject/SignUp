@@ -176,6 +176,7 @@ public class SignUpController {
     @PostMapping("/loginform/findpwdform/emailcheck")
     @ResponseBody
     public String findPwdEmailCheck(String emailId) {
+        System.out.println("1111111111111111111111111111111" + emailId);
         String checkEmailId =  signUpService.pwdEmailCheck(emailId);
         return checkEmailId;
     }

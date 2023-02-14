@@ -200,11 +200,11 @@ public class SignUpService implements UserDetailsService {
     //PWD 재설정을 위한 정보확인
     public String findPwdSearch(Member.rqFindPwd rqFindPwd){
         Member member = rqFindPwd.toEntity();
-        String findByFindPwd = memberRepository.findPwd(member.getEmailId(), member.getName(), member.getPhoneNumber());
-        if ( findByFindPwd == null ) {
+        Member findByFindPwd = memberRepository.findPwd(member.getEmailId(), member.getName(), member.getPhoneNumber());
+        if ( findByFindPwd.getPlatform() == null ) {
             return "no";
         } else {
-            return "yes";
+            return findByFindPwd.getPlatform();
         }
     }
 

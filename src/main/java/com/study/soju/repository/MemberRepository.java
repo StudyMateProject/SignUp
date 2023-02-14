@@ -16,11 +16,13 @@ public interface MemberRepository extends JpaRepository <Member, Object> {
     Member findByNickname(String nickname);
     Member findByPhoneNumber(String phoneNumber);
 
+    //ID찾기
     @Query(value = "SELECT * FROM Member m WHERE m.name = :name AND m.phoneNumber = :phoneNumber", nativeQuery = true)
     Member findEmailId(@Param("name") String name, @Param("phoneNumber") String phoneNumber);
 
-    @Query("SELECT m.emailId FROM Member m WHERE m.emailId = :emailId AND m.phoneNumber = :phoneNumber AND  m.name = :name")
-    String findPwd(@Param("emailId") String emailId, @Param("name") String name, @Param("phoneNumber") String phoneNumber);
+    //PWD 찾기
+    @Query(value = "SELECT * FROM Member m WHERE m.emailId = :emailId AND m.phoneNumber = :phoneNumber AND  m.name = :name", nativeQuery = true)
+    Member findPwd(@Param("emailId") String emailId, @Param("name") String name, @Param("phoneNumber") String phoneNumber);
 
     @Query("UPDATE Member m SET m.pwd = :pwd WHERE m.emailId = :emailId")
     @Modifying // INSERT / UPDATE / DELETE 를 사용할 때 필요한 어노테이션
