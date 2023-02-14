@@ -169,7 +169,23 @@ public class Member {
         }
     }
 
-    //ID 찾기 response
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @ToString
+    public static class rpFindId {
+        private String emailId;
+        private String platform;
+
+        public rpFindId (String emailId) {
+            this.emailId = getEmailId();
+            this.platform = getPlatform();
+        }
+    }
+
+    //PWD 찾기 request
     @Getter
     @Setter
     @NoArgsConstructor
@@ -190,7 +206,7 @@ public class Member {
         }
     }
 
-    //PWD 찾기 request
+    //PWD reset
     @Getter
     @Setter
     @NoArgsConstructor
@@ -256,7 +272,6 @@ public class Member {
 
         public static oAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
             if ( "naver".equals(registrationId) ) {
-                System.out.println("1!!!!!!!!!!!!!!!!!!!!!!!!!" + attributes);
                 return ofNaver(registrationId, userNameAttributeName, attributes);
             }
             return ofGoogle(registrationId, userNameAttributeName, attributes);
@@ -273,7 +288,7 @@ public class Member {
                     .birthday((String) response.get("birthday"))
                     .phoneNumber((String) response.get("mobile"))
                     .platform(registrationId)
-                    .attributes(attributes)
+                    .attributes(response)
                     .nameAttributeKey(userNameAttributeName)
                     .build();
         }

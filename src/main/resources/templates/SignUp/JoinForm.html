@@ -35,7 +35,7 @@
 
             <li><label>생일 </label><input th:field="*{birthday}" type="date"></li>
 
-            <li><label>휴대전화 </label><input th:field="*{phoneNumber}" type="tel" oninput="autoHyphen1(this)" maxlength="13">
+            <li><label>휴대전화 </label><input th:field="*{phoneNumber}" type="tel" oninput="autoHyphen(this)" maxlength="13">
                 <input id="btnPhone" value="인증하기" type="button"></li>
 
             <li><label>주소 </label><input th:field="*{address}" type="text">
@@ -181,15 +181,6 @@
         }
     </script>
 
-    <!--<script> //자동하이픈
-        const autoHyphen = (target) => {
-            target.value = target.value  //특정이벤트가 발생하는 태그 -> value값을 설정해주는 태그
-                                 .replace(/[^0-9]/g, '')  //숫자를 제외한 모든 문자 제거
-                                 .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`).replace(/(\-{1,2})$/g, "");
-                                 // 010-****-**** 형식을 위한 정규식 //2번째 replace는 010이후의 숫자를 치면 바로 -가 나오게
-        }
-    </script>-->
-
     <!-- iamport.payment.js 인증 -->
     <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
@@ -249,7 +240,6 @@
                 let birthday = document.getElementById("birthday");
                 let phoneNumber = document.getElementById("phoneNumber");
 
-                console.log(data);
                 if( data == "no" ) {
                     alert("이미 가입된 회원 정보입니다.");
                     name.value = "";

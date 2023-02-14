@@ -5,7 +5,10 @@
     <title>ID 찾기 결과</title>
 </head>
 <body>
-    <h2 th:text="'ID는 ' + ${emailId} + '입니다.'"></h2>
+    <div>
+        <h2 th:text="'ID는 ' + ${emailId} + '입니다.'"></h2>
+        <h2 th:text="'가입하신 경로는 ' + ${platform} + '입니다.'"></h2>
+    </div>
     <input value="메인 페이지로 이동" type="button" onclick="location.href='/'">
     <input value="로그인 페이지로 이동" type="button" onclick="location.href='/loginform'">
 </body>

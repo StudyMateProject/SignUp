@@ -42,12 +42,18 @@
     function resultFindId() {
         if ( xhr.readyState == 4 && xhr.status == 200 ) {
             let data = xhr.responseText;
+            console.log(data);
 
-            if ( data == "no" ) {
+            if ( data == null ) {
                 alert("입력하신 정보로 가입된 아이디가 없습니다.\n입력하신 정보를 다시 확인해 주세요.");
                 return;
             } else {
-                location.href = "/loginform/findidform/checkid?emailId=" + data;
+                let json = JSON.parse(data);
+                let emailId = json.emailId;
+                let platform = json.platform;
+                console.log(emailId);
+                console.log(platform);
+                location.href = "/loginform/findidform/checkid?emailId=" + emailId + "&platform=" + platform;
             }
 
         }

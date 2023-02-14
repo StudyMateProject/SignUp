@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class SignUpController {
@@ -148,15 +149,19 @@ public class SignUpController {
     //ID 찾기
     @PostMapping("/loginform/findidform/findid")
     @ResponseBody
-    public String findId(Member.rqFindId rqFindId){
-        String rpFindId = signUpService.findIdSearch(rqFindId);
+    public Member.rpFindId findId(Member.rqFindId rqFindId){
+        Member.rpFindId rpFindId = signUpService.findIdSearch(rqFindId);
+        if(rpFindId == null) {
+            return null;
+        }
         return rpFindId;
     }
 
     //ID 찾기 결과 확인 페이지 이동
     @GetMapping("/loginform/findidform/checkid")
-    public String checkId(String emailId, Model model) {
+    public String checkId(String emailId, String platform, Model model) {
         model.addAttribute("emailId", emailId);
+        model.addAttribute("platform", platform);
         return "SignUp/FindIdResult";
     }
 

@@ -16,8 +16,8 @@ public interface MemberRepository extends JpaRepository <Member, Object> {
     Member findByNickname(String nickname);
     Member findByPhoneNumber(String phoneNumber);
 
-    @Query("SELECT m.emailId FROM Member m WHERE m.name = :name AND m.phoneNumber = :phoneNumber")
-    String findEmailId(@Param("name") String name, @Param("phoneNumber") String phoneNumber);
+    @Query(value = "SELECT * FROM Member m WHERE m.name = :name AND m.phoneNumber = :phoneNumber", nativeQuery = true)
+    Member findEmailId(@Param("name") String name, @Param("phoneNumber") String phoneNumber);
 
     @Query("SELECT m.emailId FROM Member m WHERE m.emailId = :emailId AND m.phoneNumber = :phoneNumber AND  m.name = :name")
     String findPwd(@Param("emailId") String emailId, @Param("name") String name, @Param("phoneNumber") String phoneNumber);

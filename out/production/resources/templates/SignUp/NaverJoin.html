@@ -42,7 +42,7 @@
                                                                       <option value="entrance">입시</option>
                                                                       <option value="etc">기타</option></select></li>
         </ul>
-        <input type="button" value="가입하기" onclick="join(this.form)">
+        <input type="button" value="가입하기" onclick="joinStart(this.form)">
         <input type="button" value="취소하기" onclick="location.href='/login'">
 </form>
     <!--JS----------------------------------------------------------------------------------------------------------------->
@@ -106,119 +106,135 @@
 
     <!--회원가입 진행 & 유효성 검사-->
     <script>
-        function join(f) {
-            //입력한 정보들
-            //emailId
-            let emailId = f.emailId.value; //Email
+        function joinStart(f) {
+            let phoneNumber = f.phoneNumber.value;
 
-            //name
-            let name = f.name.value;
+            let url = "/joinform/phonecheck";
+            let param = "phoneNumber=" + phoneNumber;
+            sendRequest(url, param, join, "POST");
+        }
+        function join() {
+            if ( xhr.readyState == 4 && xhr.status == 200 ) {
+                let data = xhr.responseText;
 
-            //nickname
-            let nickname = f.nickname.value;
-            let hNickname = document.getElementById("hNickname").value; //닉네임 중복체크
+                //입력한 정보들
+                //emailId
+                let emailId = document.getElementById("emailId"); //Email
 
-            //birthday
-            let birthday = f.birthday.value; //birthday
+                //name
+                let name = document.getElementById("name");
 
-            //gender
-            let gender = f.gender.value; //gender
+                //nickname
+                let nickname = document.getElementById("nickname");
+                let hNickname = document.getElementById("hNickname"); //닉네임 중복체크
 
-            //phoneNumber
-            let phoneNumber = f.phoneNumber.value; //phoneNumber
+                //birthday
+                let birthday = document.getElementById("birthday"); //birthday
 
-            //address
-            let address = f.address.value;
-            let detailAddress = f.detailAddress.value;
+                //gender
+                let gender = document.getElementById("gender"); //gender
 
-            //studyType
-            let studyType = f.studyType.value;
+                //phoneNumber
+                let phoneNumber = document.getElementById("phoneNumber"); //phoneNumber
 
-            //플랫폼
-            let platform = f.platform.value;
+                //address
+                let address = document.getElementById("address");
+                let detailAddress = document.getElementById("detailAddress");
 
-            let roleName = f.roleName.value;
+                //studyType
+                let studyType = document.getElementById("studyType");
 
-            //유효성 검사
-            //ID
-            if ( emailId == '' ) {
-                alert("아이디를 불러오지 못했습니다. 네이버 로그인 부터 다시 진행해 주세요");
-                location.href = "/loginform";
-                return;
+                //플랫폼
+                let platform = document.getElementById("platform");
+
+                let roleName = document.getElementById("roleName");
+
+                if( data == "no" ) {
+                    alert("이미 가입되어 있는 핸드폰 번호입니다.");
+                    return;
+                } else {
+                    //유효성 검사
+                    //ID
+                    if ( emailId.value == '' ) {
+                        alert("아이디를 불러오지 못했습니다. 네이버 로그인 부터 다시 진행해 주세요");
+                        location.href = "/loginform";
+                        return;
+                    }
+
+                    //이름
+                    if ( name.value == '' ) {
+                        alert("이름을 불러오지 못했습니다. 네이버 로그인 부터 다시 진행해 주세요");
+                        location.href = "/loginform";
+                        return;
+                    }
+
+                    //닉네임
+                    if ( nickname.value == '' ) {
+                        alert("닉네임을 입력하세요");
+                        return;
+                    }
+                    //닉네임 형식
+                    if ( nickname.length > 20 ) {
+                        alert("닉네임의 길이는 10자 이내입니다.");
+                        return;
+                    }
+                    if ( nickname.value != hNickname.value ) {
+                        alert("닉네임 중복확인을 해주세요");
+                        return;
+                    }
+
+                    //birthday
+                    if ( birthday.value == '' ) {
+                        alert("생일을 불러오지 못했습니다. 네이버 로그인 부터 다시 진행해 주세요");
+                        location.href = "/loginform";
+                        return;
+                    }
+
+                    //gender
+                    if ( gender.value == '' ) {
+                        alert("성별을 선택하세요");
+                        return;
+                    }
+
+                    //phoneNumber
+                    if ( phoneNumber.value == '' ) {
+                        alert("핸드폰 번호를 불러오지 못했습니다. 네이버 로그인 부터 다시 진행해 주세요");
+                        location.href = "/loginform";
+                        return;
+                    }
+
+                    //address
+                    if ( address.value == '' ) {
+                        alert("주소를 입력하세요");
+                        return;
+                    }
+                    //detailAddress
+                    if ( detailAddress.value == '' ) {
+                        alert("상세주소를 입력하세요");
+                        return;
+                    }
+
+                    //studyType
+                    if ( studyType.value == '' ) {
+                        alert("관심분야를 선택하세요");
+                        return;
+                    }
+
+                    let url = "/loginform/socialjoin";
+                    let param = "emailId=" + emailId +
+                                "&name=" + name +
+                                "&nickname=" + nickname +
+                                "&birthday=" + birthday +
+                                "&gender=" + gender +
+                                "&phoneNumber=" + phoneNumber +
+                                "&address=" + address +
+                                "&detailAddress=" + detailAddress +
+                                "&studyType=" + studyType +
+                                "&platform=" + platform +
+                                "&roleName=" + roleName;
+                    sendRequest(url, param, resultJoin, "POST");
+                }
             }
-
-            //이름
-            if ( name == '' ) {
-                alert("이름을 불러오지 못했습니다. 네이버 로그인 부터 다시 진행해 주세요");
-                location.href = "/loginform";
-                return;
-            }
-
-            //닉네임
-            if ( nickname == '' ) {
-                alert("닉네임을 입력하세요");
-                return;
-            }
-            //닉네임 형식
-            if ( nickname.length > 20 ) {
-                alert("닉네임의 길이는 10자 이내입니다.");
-                return;
-            }
-            if ( nickname != hNickname ) {
-                alert("닉네임 중복확인을 해주세요");
-                return;
-            }
-
-            //birthday
-            if ( birthday == '' ) {
-                alert("생일을 불러오지 못했습니다. 네이버 로그인 부터 다시 진행해 주세요");
-                location.href = "/loginform";
-                return;
-            }
-
-            //gender
-            if ( gender == '' ) {
-                alert("성별을 선택하세요");
-                return;
-            }
-
-            //phoneNumber
-            if ( phoneNumber == '' ) {
-                alert("핸드폰 번호를 불러오지 못했습니다. 네이버 로그인 부터 다시 진행해 주세요");
-                location.href = "/loginform";
-                return;
-            }
-
-            //address
-            if ( address == '' ) {
-                alert("주소를 입력하세요");
-                return;
-            }
-            //detailAddress
-            if ( detailAddress == '' ) {
-                alert("상세주소를 입력하세요");
-                return;
-            }
-
-            //studyType
-            if ( studyType == '' ) {
-                alert("관심분야를 선택하세요");
-                return;
-            }
-
-            let url = "/loginform/socialjoin";
-            let param = "emailId=" + emailId +
-                        "&name=" + name +
-                        "&nickname=" + nickname +
-                        "&birthday=" + birthday +
-                        "&gender=" + gender +
-                        "&phoneNumber=" + phoneNumber +
-                        "&address=" + address +
-                        "&detailAddress=" + detailAddress +
-                        "&studyType=" + studyType +
-                        "&platform=" + platform +
-                        "&roleName=" + roleName;
-            sendRequest(url, param, resultJoin, "POST");
         }
 
         function resultJoin() {

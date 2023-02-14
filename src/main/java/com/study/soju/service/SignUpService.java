@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Properties;
 
 @Builder
@@ -100,7 +101,6 @@ public class SignUpService implements UserDetailsService {
     //핸드폰번호 중복체크
     public String checkPhone (String phoneNumber) {
         Member member = memberRepository.findByPhoneNumber(phoneNumber);
-        System.out.print(member);
         if ( member != null ) {
             return "no";
         } else {
@@ -128,13 +128,17 @@ public class SignUpService implements UserDetailsService {
 
     ////////////////////////////////////////////////ID찾기////////////////////////////////////////////////
     //ID찾기
-    public String findIdSearch(Member.rqFindId rqFindId){
+    public Member.rpFindId findIdSearch(Member.rqFindId rqFindId){
         Member member = rqFindId.toEntity();
-        String findEmailId = memberRepository.findEmailId(member.getName(), member.getPhoneNumber());
+        Member findEmailId = memberRepository.findEmailId(member.getName(), member.getPhoneNumber());
+        System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeee" + findEmailId);
+        System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEE" + findEmailId.getEmailId());
         if ( findEmailId == null ) {
-            return "no";
+            return null;
         } else {
-            return findEmailId;
+            Member.rpFindId rpFindId = new Member.rpFindId(findEmailId.getEmailId(), findEmailId.getPlatform());
+            System.out.println("11111111111111111111111111:" + rpFindId);
+            return rpFindId;
         }
     }
 

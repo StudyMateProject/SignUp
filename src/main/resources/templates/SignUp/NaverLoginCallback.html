@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Naver</title>
 </head>
 <body>
     <!-- 네이버 회원가입에 미리 작성될 정보들 -->
@@ -31,6 +31,7 @@
 				if (status) {
 					// form태그
 					let ff = document.getElementById("ff");
+
 					// naver API 필수정보값
 					const name = naverLogin.user.getName(); // 이름
 					const gender = naverLogin.user.getGender(); // 성별
@@ -50,8 +51,8 @@
 					hName.value = name; // 이름
 					hGender.value = gender; // 성별
 					hEmailId.value = emailId; // 이메일
-					hBirthday.value = birthyear + "-" +birthday; // 생일
-					hPhoneNumber.value = phoneNumber; //핸드폰 번호
+					hBirthday.value = birthyear + "-" + birthday; // 생일
+					hPhoneNumber.value = phoneNumber.replace(/[^0-9]/g, ''); //핸드폰 번호 + 하이픈 제거
 
 					// 다음 인증페이지 이동
 				    ff.submit();
