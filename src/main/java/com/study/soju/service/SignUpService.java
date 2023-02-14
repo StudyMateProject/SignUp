@@ -131,13 +131,10 @@ public class SignUpService implements UserDetailsService {
     public Member.rpFindId findIdSearch(Member.rqFindId rqFindId){
         Member member = rqFindId.toEntity();
         Member findEmailId = memberRepository.findEmailId(member.getName(), member.getPhoneNumber());
-        System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeee" + findEmailId);
-        System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEE" + findEmailId.getEmailId());
         if ( findEmailId == null ) {
             return null;
         } else {
             Member.rpFindId rpFindId = new Member.rpFindId(findEmailId.getEmailId(), findEmailId.getPlatform());
-            System.out.println("11111111111111111111111111:" + rpFindId);
             return rpFindId;
         }
     }

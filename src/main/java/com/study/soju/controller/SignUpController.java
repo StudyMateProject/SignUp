@@ -151,9 +151,6 @@ public class SignUpController {
     @ResponseBody
     public Member.rpFindId findId(Member.rqFindId rqFindId){
         Member.rpFindId rpFindId = signUpService.findIdSearch(rqFindId);
-        if(rpFindId == null) {
-            return null;
-        }
         return rpFindId;
     }
 
