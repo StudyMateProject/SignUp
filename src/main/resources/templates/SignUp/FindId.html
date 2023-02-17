@@ -8,7 +8,6 @@
 <body>
     <h2>아이디 찾기</h2>
     <form action="/loginform/findidform" method="post" th:object="${memberDTO}">
-        <input type="text" id="hEmailId">
         <ul>
             <li><label>이름</label><input th:field="*{name}" type="text"></li>
             <li><label>핸드폰번호</label><input th:field="*{phoneNumber}" type="text"></li>
