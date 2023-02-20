@@ -31,7 +31,7 @@ public class SignUpController {
     @GetMapping("/joinform")
     public String joinform(Model model) {
         model.addAttribute("memberDTO", new Member.rqJoinMember());
-        return "SignUp/JoinForm";
+        return "/SignUp/JoinForm";
     }
 
     //회원가입 진행 (회원정보 저장)
@@ -39,7 +39,7 @@ public class SignUpController {
     public String join(Member.rqJoinMember rqJoinMember) {
         //Member DTO / 비밀번호 암호화 메서드(passwordEncoder) 전송
         signUpService.joinMember(rqJoinMember, passwordEncoder);
-        return "SignUp/LoginForm";  //로그인으로 이동
+        return "/SignUp/LoginForm";  //로그인으로 이동
     }
 
     //이메일 중복체크 & 이메일 전송 SMTP
@@ -93,7 +93,7 @@ public class SignUpController {
             return "redirect:/oauth2/authorization/naver";
         } else {
             model.addAttribute("memberDTO", rqJoinSocial);
-            return "SignUp/NaverJoin";
+            return "/SignUp/NaverJoin";
         }
     }
 
@@ -101,7 +101,7 @@ public class SignUpController {
     @PostMapping("/loginform/socialjoin")
     public String JoinSocial(Member.rqJoinSocial rqJoinSocial) {
         signUpOAuthService.JoinSocial(rqJoinSocial);
-        return "SignUp/Loginform";
+        return "/SignUp/Loginform";
     }
 
     ////////////////////////////////////////////////로그인////////////////////////////////////////////////
@@ -116,7 +116,7 @@ public class SignUpController {
     @GetMapping("/loginform/naverlogincallback")
     public String naverCallback(Model model) {
         model.addAttribute("memberDTO", new Member.rqJoinSocial());
-        return "SignUp/NaverLoginCallback";
+        return "/SignUp/NaverLoginCallback";
     }
 
     //구글 서버 통신
@@ -134,7 +134,7 @@ public class SignUpController {
         }
         model.addAttribute("emailId", emailId);
         model.addAttribute("memberDTO", new Member.rqJoinSocial());
-        return "SignUp/GoogleJoin";
+        return "/SignUp/GoogleJoin";
     }
 
     ////////////////////////////////////////////////ID찾기////////////////////////////////////////////////
@@ -143,7 +143,7 @@ public class SignUpController {
     public String findIdForm(Model model) {
         //바인딩
         model.addAttribute("memberDTO", new Member.rqFindId());
-        return "SignUp/FindId";
+        return "/SignUp/FindId";
     }
 
     //ID 찾기
@@ -159,7 +159,7 @@ public class SignUpController {
     public String checkId(String emailId, String platform, Model model) {
         model.addAttribute("emailId", emailId);
         model.addAttribute("platform", platform);
-        return "SignUp/FindIdResult";
+        return "/SignUp/FindIdResult";
     }
 
     ////////////////////////////////////////////////PWD찾기(재설정)////////////////////////////////////////////////
@@ -169,7 +169,7 @@ public class SignUpController {
     public String findPwdForm(Model model) {
         //바인딩
         model.addAttribute("memberDTO", new Member.rqFindPwd());
-        return "SignUp/FindPwd";
+        return "/SignUp/FindPwd";
     }
 
     //비밀번호 재설정 이메일 인증
@@ -193,14 +193,14 @@ public class SignUpController {
     public String resetPwdForm(String emailId, Model model) {
         //바인딩
         model.addAttribute("emailId", emailId);
-        return "SignUp/ResetPwd";
+        return "/SignUp/ResetPwd";
     }
 
     //PWD 재설정
     @PostMapping("/loginform/findpwdform/resetpwdform/resetpwd")
     public String resetPwd(Member.rqResetPwd rqResetPwd){
         signUpService.resetPwd(rqResetPwd, passwordEncoder);
-        return "SignUp/LoginForm";
+        return "/SignUp/LoginForm";
     }
 
 }

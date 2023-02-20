@@ -3,49 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Google 회원가입</title>
+    <link rel="stylesheet" type="text/css" href="/css/join_find.css">
 </head>
 <body>
-    <form th:object="${memberDTO}">
-        <input name="platform" type="hidden" value="Google">
-        <input name="roleName" type="hidden" value="USER">
-        <input id="hNickname" type="text">
-        <ul>
-            <li><label>아이디(이메일) </label><input name="emailId" th:value="${emailId}" type="text" readonly></li>
+    <div class="container">
+        <form th:object="${memberDTO}">
+            <input name="platform" type="hidden" value="Google">
+            <input name="roleName" type="hidden" value="USER">
+            <input id="hNickname" type="hidden">
+            <a class="mainLogo" href="/" alt="SOJU">
+                <img src="/img/betalogo.jpg" class="mainLogoImg">
+            </a>
+            <h2>Google 회원가입</h2>
+            <ul>
+                <li class="liJoinInput"><label class="labelText">아이디(이메일) </label><br><input th:field="*{emailId}" class="inputText" type="text" readonly></li>
 
-            <li><label>닉네임(별명) </label><input th:field="*{nickname}" type="text">
-                <input type="button" value="중복확인" onclick="checkNickname(this.form)"><br></li>
-            <li><label id="nicknameCheck"></label></li>
+                <li class="liJoinInput"><label class="labelText">닉네임(별명) </label><br><input th:field="*{nickname}" placeholder="10자 이내 닉네임" class="inputText" type="text">
+                    <input type="button" value="중복확인" class="btnJoinForm" onclick="checkNickname(this.form)"><br></li>
+                <li class="liJoinInput"><label id="nicknameCheck" class="errorMsg"></label></li>
 
-            <li><label>성별 </label><label>남</label><input th:field="*{gender}" type="radio" value="M">
-                                   <label>여</label><input th:field="*{gender}" type="radio" value="F"></li>
+                <li class="liJoinInput"><label class="labelText">성별 </label><br><label class="genderLabel">남</label><input th:field="*{gender}" type="radio" value="M" readonly>
+                    <label class="genderLabel">여</label><input th:field="*{gender}" type="radio" value="F"></li>
 
-            <li><label>이름 </label><input th:field="*{name}" type="text" readonly></li>
+                <li class="liJoinInput"><label class="labelText">이름 </label><br><input th:field="*{name}" type="text" class="inputText" readonly></li>
 
-            <li><label>생일 </label><input th:field="*{birthday}" type="date" readonly></li>
+                <li class="liJoinInput"><label class="labelText">생일 </label><br><input th:field="*{birthday}" type="date" class="inputText" readonly></li>
 
-            <li><label>휴대전화 </label><input th:field="*{phoneNumber}" type="tel" readonly>
-                <input id="btnPhone" value="인증하기" type="button" onclick="phoneCheck()"></li>
+                <li class="liJoinInput"><label class="labelText">휴대전화 </label><br><input th:field="*{phoneNumber}" type="tel" class="inputText" readonly>
+                    <input id="btnPhone" value="인증하기" type="button" class="btnJoinForm" onclick="phoneCheck()"></li>
 
-            <li><label>주소 </label><input th:field="*{address}" type="text">
-                <input id="btnAddress" type="button" value="주소찾기"></li>
-            <li><label>상세주소 </label><input th:field="*{detailAddress}" type="text"></li>
+                <li class="liJoinInput"><label class="labelText">주소 </label><br><input th:field="*{address}" class="inputText" type="text">
+                    <input id="btnAddress" type="button" value="주소찾기" class="btnJoinForm"></li>
+                <li class="liJoinInput"><label class="labelText">상세주소 </label><br><input th:field="*{detailAddress}" class="inputText" type="text"></li>
 
-            <li><label>관심분야 </label><select th:field="*{studyType}"><option value="">관심분야</option>
-                                                                      <option value="computer">컴퓨터 / IT</option>
-                                                                      <option value="math">수학</option>
-                                                                      <option value="management">경영 / 마케팅</option>
-                                                                      <option value="design">디자인</option>
-                                                                      <option value="education">교육</option>
-                                                                      <option value="literature">문학</option>
-                                                                      <option value="engineering">공학</option>
-                                                                      <option value="language">언어</option>
-                                                                      <option value="employment">취업</option>
-                                                                      <option value="entrance">입시</option>
-                                                                      <option value="etc">기타</option></select></li>
-        </ul>
-        <input type="button" value="가입하기" onclick="join(this.form)">
-        <input type="button" value="취소하기" onclick="location.href='/login'">
-    </form>
+                <li class="liJoinInput"><label class="labelText">관심분야 </label><br><select th:field="*{studyType}" class="inputText studyType"><option value="">관심분야</option>
+                                                                          <option value="computer">컴퓨터 / IT</option>
+                                                                          <option value="math">수학</option>
+                                                                          <option value="management">경영 / 마케팅</option>
+                                                                          <option value="design">디자인</option>
+                                                                          <option value="education">교육</option>
+                                                                          <option value="literature">문학</option>
+                                                                          <option value="engineering">공학</option>
+                                                                          <option value="language">언어</option>
+                                                                          <option value="employment">취업</option>
+                                                                          <option value="entrance">입시</option>
+                                                                          <option value="etc">기타</option></select></li>
+            </ul>
+            <div class="divBtnJoin">
+                <input type="button" value="가입하기" class="btnJoin" onclick="join(this.form)">
+                <input type="button" value="취소하기" class="btnJoin" onclick="location.href='/loginform'">
+            </div>
+        </form>
+    </div>
     <!--JS----------------------------------------------------------------------------------------------------------------->
     <script src="/js/httpRequest.js"></script>
     <!--닉네임 중복체크 및 글자 수 제한-->
