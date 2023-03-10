@@ -200,7 +200,7 @@ public class SignUpController {
     @PostMapping("/loginform/findpwdform/resetpwdform/resetpwd")
     public String resetPwd(Member.rqResetPwd rqResetPwd){
         signUpService.resetPwd(rqResetPwd, passwordEncoder);
-        return "/SignUp/LoginForm";
+        return "/Main";
     }
 
 }

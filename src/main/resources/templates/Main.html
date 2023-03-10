@@ -2,89 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>SOJU</title>
     <link rel="stylesheet" type="text/css" href="/css/header.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css" rel="stylesheet">
     <style>
-        .scrolledDown {
-            box-shadow: 0 10px 10px 1px rgba(0, 0, 0, 0.54);
-        }
-        .blankDiv{
-            width: 100%;
-            height: 200px;
-        }
-        .imgDiv{
-            width: 100%;
-            height: 300px;
-            background-color: #aaf;
-        }
-        .attentionDiv{
-            width: 100%;
-            height: 30%;
-        }
-        .attentionDivTitle{
-            width: 95%;
-            height: 15%;
-            padding: 5% 0% 0% 5%;
-            font-size: 30px;
-        }
-        .attentionDivBody{
-            width: 100%;
-            height: 80%;
-            display: flex;
-            justify-content:space-evenly;
-            align-items: center;
-        }
-        .attentionDivBodyDiv1{
-            width: 10%;
-            height: 100%;
-        }
-        .attentionDivBodyDiv2{
-            width: 10%;
-            height: 100%;
-        }
-        .attentionDivBodyDiv3{
-            width: 10%;
-            height: 100%;
-        }
-        .attentionDivBodyDiv4{
-            width: 10%;
-            height: 100%;
-        }
-        .attentionDivBodyDiv5{
-            width: 10%;
-            height: 100%;
-        }
-        .attentionDivBodyDiv6{
-            width: 10%;
-            height: 100%;
-        }
-        .attentionDivBodyDiv7{
-            width: 10%;
-            height: 100%;
-        }
-        .attentionDivBodyDiv8{
-            width: 10%;
-            height: 100%;
-        }
-        .attentionDivBodyDiv9{
-            width: 10%;
-            height: 100%;
-        }
-        .attentionDivBodyDiv10{
-            width: 10%;
-            height: 100%;
-        }
-        .attentionDivBodyDiv11{
-            width: 10%;
-            height: 100%;
-        }
-        .attentionDivBodyDivCircle{
-            margin: 40% 0% 0% 20%;
-            width: 60%;
-            height: 30%;
-            cursor: pointer;
-        }
         img{
             width: 100%;
             height: 100%;
@@ -367,45 +289,155 @@
         .infoRightBodyDiv4{
             padding: 0% 0% 3% 0%;
         }
+
+        .imgDiv{
+            margin
+            width: 100%;
+            height: 400px;
+            background-color: #ececec;
+        }
+
+        .scrolledDown {
+            box-shadow: 0 10px 10px 1px rgba(0, 0, 0, 0.54);
+        }
+
+        .attentionDiv{
+            width: 100%;
+            height: 30%;
+        }
+        .attentionDivTitle{
+            width: 95%;
+            height: 15%;
+            padding: 5% 0% 0% 5%;
+            font-size: 30px;
+        }
+        .attentionDivBody{
+            width: 100%;
+            height: 80%;
+            display: flex;
+            justify-content:space-evenly;
+            align-items: center;
+        }
+        .attentionDivBodyDiv1{
+            width: 10%;
+            height: 100%;
+        }
+        .attentionDivBodyDiv2{
+            width: 10%;
+            height: 100%;
+        }
+        .attentionDivBodyDiv3{
+            width: 10%;
+            height: 100%;
+        }
+        .attentionDivBodyDiv4{
+            width: 10%;
+            height: 100%;
+        }
+        .attentionDivBodyDiv5{
+            width: 10%;
+            height: 100%;
+        }
+        .attentionDivBodyDiv6{
+            width: 10%;
+            height: 100%;
+        }
+        .attentionDivBodyDiv7{
+            width: 10%;
+            height: 100%;
+        }
+        .attentionDivBodyDiv8{
+            width: 10%;
+            height: 100%;
+        }
+        .attentionDivBodyDiv9{
+            width: 10%;
+            height: 100%;
+        }
+        .attentionDivBodyDiv10{
+            width: 10%;
+            height: 100%;
+        }
+        .attentionDivBodyDiv11{
+            width: 10%;
+            height: 100%;
+        }
+        .attentionDivBodyDivCircle{
+            margin: 40% 0% 0% 20%;
+            width: 60%;
+            height: 30%;
+            cursor: pointer;
+        }
+
     </style>
     <script type="text/javascript" src="/js/moveDiv.js"></script>
 </head>
 <body>
     <header>
-        <div class="topDiv">
-            <span class="leftSpan" onclick="location.href='/'">SOJU</span>
-            <span class = "rightSpan">
-                <ul>
-                    <li style="cursor: pointer;">
-                        <div class="icon" data-number="5">
-                            <i class="ri-notification-4-fill"></i>
+        <nav class="headerContainer">
+            <div class="headerImg">
+                <a href="/" alt="SOJU">
+                    <img src="/img/betalogo.jpg" class="mainLogo">
+                </a>
+            </div>
+
+            <div class="headerMenu">
+                <div class="headerMenuLeft">
+
+                    <div class="categoryMenu">
+                        <span>스터디원</span>
+                        <div class="dropTable">
+                            <a class="dropRecruitStudy dropMenu" href="/recruitstudy">스터디원 모집</a>
+                            <a class="dropRecruitMentor dropMenu" href="/recruitmentorlist">멘토 모집</a>
+                            <a class="dropMentorProfile dropMenu" href="/mentorprofilelist">멘토 프로필</a>
                         </div>
-                    </li>
-                    <li>
-                        <input class="inputButton" sec:authorize="isAnonymous()" type="button" value="회원가입/로그인" onclick="location.href='/loginform'">
-                        <input class="inputButton" sec:authorize="isAuthenticated()" type="button" value="로그아웃" onclick="location.href='/logout'">
-                    </li>
-                </ul>
-            </span>
-        </div>
-        <div class="navDiv">
-            <a style="text-decoration:none; color: black;" href="/recruitstudy" >소중한 친구들 구하기</a>
-            <label>|</label>
-            <a style="text-decoration:none; color: black;" href="/meta">모임 공간</a>
-            <label>|</label>
-            <a style="text-decoration:none; color: black;" href="/noticeroom">게시판</a>
-            <label>|</label>
-            <a style="text-decoration:none; color: black;" href="/store">스토어</a>
-            <label>|</label>
-            <a style="text-decoration:none; color: black;" href="/mypage">마이페이지</a>
-        </div>
+                    </div>
+
+                    <div class="categoryMenu">
+                        <a href="/meta" class="metaMenu">
+                            <span class="categoryMenu">스터디룸</span>
+                        </a>
+                    </div>
+                    <div class="categoryMenu">
+                        <a href="/noticeroom" class="noticeRoomMenu">
+                            <span class="categoryMenu">게시판</span>
+                        </a>
+                    </div>
+                    <div class="categoryMenu">
+                        <a href="/store" class="storeMenu">
+                            <span class="categoryMenu">스토어</span>
+                        </a>
+                    </div>
+                    <div class="categoryMenu">
+                        <a href="/mypage" class="myPageMenu">
+                            <span class="categoryMenu">마이페이지</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="headerMenuRight">
+                    <div class="whenLogin">
+                        <div class="welcome" th:text="${nickname} + '님 반갑습니다!'"></div>
+                        <div class="notificationsMenu">
+                            <div class="icon" data-number="5">
+                                <i class="ri-notification-4-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btnLogin">
+                        <input class="inputButtonLogin" sec:authorize="isAnonymous()" type="button" value="로그인" onclick="location.href='/loginform'">
+                        <input class="inputButtonLogin" sec:authorize="isAuthenticated()" type="button" value="로그아웃" onclick="location.href='/logout'">
+                    </div>
+                </div>
+            </div>
+        </nav>
     </header>
-    <div class="blankDiv">
-        <input type="hidden" value="공간 좀 두기">
-    </div>
+
     <div class="imgDiv">
         <input type="hidden" value="광고">
     </div>
+
     <div class="attentionDiv">
         <div class="attentionDivTitle">
             <span>어느 분야에 관심이 있나요?</span>
@@ -479,6 +511,7 @@
             </div>
         </div>
     </div>
+
     <div class="hotDiv">
         <div class="hotDivTitle">
             <span>가장 핫한 스터디</span>
@@ -536,50 +569,7 @@
             <div class="likeDivBodyDiv4">멘토 4</div>
         </div>
     </div>
-    <div>
-        <input type="hidden" value="공간 좀 띄우고">
-    </div>
-    <div class="info">
-        <span class="infoLeft">
-            <div class="infoLeftDiv">
-                <div class="infoLeftTitle">
-                    <label>공지사항</label>
-                </div>
-                <div class="infoLeftBody">
-                    <div class="infoLeftBodyDiv1">내용1</div>
-                    <div class="infoLeftBodyDiv2">내용2</div>
-                    <div class="infoLeftBodyDiv3">내용3</div>
-                    <div class="infoLeftBodyDiv4">내용4</div>
-                </div>
-            </div>
-        </span>
-        <span class="infoCenter">
-            <div class="infoCenterDiv">
-                <div class="infoCenterTitle">
-                    <label>질문방</label>
-                </div>
-                <div class="infoCenterBody">
-                    <div class="infoCenterBodyDiv1">내용1</div>
-                    <div class="infoCenterBodyDiv2">내용2</div>
-                    <div class="infoCenterBodyDiv3">내용3</div>
-                    <div class="infoCenterBodyDiv4">내용4</div>
-                </div>
-            </div>
-        </span>
-        <span class="infoRight">
-            <div class="infoRightDiv">
-                <div class="infoRightTitle">
-                    <label>잡담방</label>
-                </div>
-                <div class="infoRightBody">
-                    <div class="infoRightBodyDiv1">내용1</div>
-                    <div class="infoRightBodyDiv2">내용2</div>
-                    <div class="infoRightBodyDiv3">내용3</div>
-                    <div class="infoRightBodyDiv4">내용4</div>
-                </div>
-            </div>
-        </span>
-    </div>
+
     <footer>
         <div>
             <span>개인정보 처리방침 /</span>

@@ -1,10 +1,13 @@
 package com.study.soju.controller;
 
+import com.study.soju.entity.Member;
 import com.study.soju.service.SignUpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
@@ -15,11 +18,11 @@ public class MainController {
     SignUpService signUpService;
 
     @GetMapping("/")
-    public String main(Principal principal) {
+    public String main(Principal principal, Model model) {
         if ( principal == null ) {
             return "redirect:/n";
         }
-        return "Main";
+            return "Main";
     }
 
     @GetMapping("/n")
@@ -45,5 +48,36 @@ public class MainController {
         return "SignUp/LoginForm";
     }
 
+    //마이페이지 이동
+    @GetMapping("/mypage")
+    public String mypageList(Principal principal){
+        if ( principal == null ) {
+            return "redirect:/n";
+        }
+        return "/MyPage/MyPageHome";
+    }
 
+    //개인정보 관리 이동
+    @GetMapping("/mypage/modifyform")
+    public String modifyMemberInfo(Model model, Principal principal){
+        Member.rpModifyMember rpModifyMember = signUpService.selectMember(principal);
+        model.addAttribute("member", rpModifyMember);
+        model.addAttribute("memberDTO", new Member.rqModifyMember());
+        return "MyPage/ModifyMemberInfo";
+    }
+
+    //개인정보 수정
+    @PostMapping("/mypage/modifyform/modify")
+    public String modifyMember(Member.rqModifyMember rqModifyMember){
+        signUpService.modify(rqModifyMember);
+        return "redirect:/mypage/modifyform";
+    }
+
+    //비밀번호 변경 페이지 이동
+    @GetMapping("/mypage/modifyform/editpwd")
+    public String findPwdForm(Model model, Principal principal) {
+        //바인딩
+        model.addAttribute("emailId", principal.getName());
+        return "/MyPage/ResetMyPwd";
+    }
 }

@@ -2,6 +2,7 @@ package com.study.soju.entity;
 
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,6 +42,9 @@ public class Member {
     @Column(length = 100, nullable = false)
     private String address;
 
+    @Column(length = 100)
+    private String detailAddress;
+
     @Column(length = 10, nullable = false)
     private String studyType;
 
@@ -50,14 +54,11 @@ public class Member {
     @Column(length = 100, nullable = false)
     private String roleName;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String profileImage;
 
     @Column(length = 255)
     private String selfIntro;
-
-    @Column(length = 100)
-    private String achievement;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -83,7 +84,6 @@ public class Member {
         private String roleName;
         private String detailAddress;
 
-
         //DTO를 Entity로 변환
         public Member toEntity(PasswordEncoder passwordEncoder) {
             //비밀번호 암호화
@@ -97,12 +97,12 @@ public class Member {
                     .birthday(birthday)
                     .gender(gender)
                     .phoneNumber(phoneNumber)
-                    .address(address + " " + detailAddress)
+                    .address(address)
+                    .detailAddress(detailAddress)
                     .studyType(studyType)
                     .platform(platform)
                     .roleName(roleName)
                     .profileImage("no_file")
-                    .achievement("신입생")
                     .build();
         }
     }
@@ -140,12 +140,12 @@ public class Member {
                     .birthday(birthday)
                     .gender(gender)
                     .phoneNumber(phoneNumber)
-                    .address(address + " " + detailAddress)
+                    .address(address)
+                    .detailAddress(detailAddress)
                     .studyType(studyType)
                     .platform(platform)
                     .roleName(roleName)
                     .profileImage("no_file")
-                    .achievement("신입생")
                     .build();
         }
     }
@@ -227,6 +227,87 @@ public class Member {
         }
     }
 
+    //회원정보 수정
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @ToString
+    public static class rqModifyMember {
+        private String emailId;
+        private String nickname;
+        private String phoneNumber;
+        private String address;
+        private String detailAddress;
+        private String studyType;
+        private String birthday;
+        private String name;
+        private String gender;
+        private String selfIntro;
+        private String platform;
+        private String roleName;
+        private String profileImage;
+        private MultipartFile imageFile;
+
+        public Member toEntity() {
+            //변환된 Entity반환
+            return Member.builder()
+                         .emailId(emailId)
+                         .name(name)
+                         .nickname(nickname)
+                         .birthday(birthday)
+                         .gender(gender)
+                         .phoneNumber(phoneNumber)
+                         .address(address)
+                         .detailAddress(detailAddress)
+                         .studyType(studyType)
+                         .platform(platform)
+                         .roleName(roleName)
+                         .selfIntro(selfIntro)
+                         .profileImage(profileImage)
+                         .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @ToString
+    public static class rpModifyMember {
+        private String emailId;
+        private String nickname;
+        private String phoneNumber;
+        private String address;
+        private String detailAddress;
+        private String studyType;
+        private String birthday;
+        private String name;
+        private String gender;
+        private String selfIntro;
+        private String platform;
+        private String roleName;
+        private String profileImage;
+
+        public rpModifyMember(Member member){
+            this.emailId = member.getEmailId();
+            this.nickname = member.getNickname();
+            this.phoneNumber = member.getPhoneNumber();
+            this.address = member.getAddress();
+            this.detailAddress = member.getDetailAddress();
+            this.studyType = member.getStudyType();
+            this.birthday = member.getBirthday();
+            this.name = member.getName();
+            this.gender = member.getGender();
+            this.selfIntro = member.getSelfIntro();
+            this.platform = member.getPlatform();
+            this.roleName = member.getRoleName();
+            this.profileImage = member.getProfileImage();
+        }
+    }
+
     // OAuth - Google DTO
     @Getter
     @Setter
@@ -302,4 +383,7 @@ public class Member {
                     .build();
         }
     }
+
+    //개인정보 수정
+
 }

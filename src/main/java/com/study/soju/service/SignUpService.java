@@ -12,7 +12,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -54,7 +58,7 @@ public class SignUpService implements UserDetailsService {
             // 보내는 사람 E-Mail, 제목, 내용
             String fromEmail = ""; // 보내는 사람 email - - hostSMTPid와 동일하게 작성
             String fromName = "관리자"; // 보내는 사람 이름
-            String subject = "[Study with me] 이메일 인증번호 발송 안내입니다."; // 제목
+            String subject = "[MATE] 이메일 인증번호 발송 안내입니다."; // 제목
 
             // 받는 사람 E-Mail 주소
             String mail = emailId; // 받는 사람 email
@@ -74,7 +78,7 @@ public class SignUpService implements UserDetailsService {
                 email.setSubject(subject); // 제목
                 email.setHtmlMsg(
                         "<p>" + "[메일 인증 안내입니다.]" + "</p>" +
-                                "<p>" + "Study with me를 사용해 주셔서 감사드립니다." + "</p>" +
+                                "<p>" + "Study Mate를 사용해 주셔서 감사드립니다." + "</p>" +
                                 "<p>" + "아래 인증 코드를 '인증번호'란에 입력해 주세요." + "</p>" +
                                 "<p>" + mailKey + "</p>"); // 본문 내용
                 email.send(); // 메일 보내기
@@ -163,7 +167,7 @@ public class SignUpService implements UserDetailsService {
             // 보내는 사람 E-Mail, 제목, 내용
             String fromEmail = ""; // 보내는 사람 email - - hostSMTPid와 동일하게 작성
             String fromName = "관리자"; // 보내는 사람 이름
-            String subject = "[Study with me] 이메일 인증번호 발송 안내입니다."; // 제목
+            String subject = "[MATE] 이메일 인증번호 발송 안내입니다."; // 제목
 
             // 받는 사람 E-Mail 주소
             String mail = emailId; // 받는 사람 email
@@ -183,7 +187,7 @@ public class SignUpService implements UserDetailsService {
                 email.setSubject(subject); // 제목
                 email.setHtmlMsg(
                         "<p>" + "[메일 인증 안내입니다.]" + "</p>" +
-                                "<p>" + "Study with me를 사용해 주셔서 감사드립니다." + "</p>" +
+                                "<p>" + "MATE를 사용해 주셔서 감사드립니다." + "</p>" +
                                 "<p>" + "아래 인증 코드를 '인증번호'란에 입력해 주세요." + "</p>" +
                                 "<p>" + mailKey + "</p>"); // 본문 내용
                 email.send(); // 메일 보내기
@@ -212,5 +216,41 @@ public class SignUpService implements UserDetailsService {
     public void resetPwd(Member.rqResetPwd rqResetPwd, PasswordEncoder passwordEncoder){
         Member member = rqResetPwd.toEntity(passwordEncoder);
         memberRepository.findChangePwd(member.getEmailId(), member.getPwd());
+    }
+
+    ////////////////////////////////////////////////회원정보 수정////////////////////////////////////////////////
+    //회원정보 조회
+    public Member.rpModifyMember selectMember(Principal principal){
+        String emailId = principal.getName();
+        Member member = memberRepository.findAll(emailId);
+        Member.rpModifyMember rpModifyMember = new Member.rpModifyMember(member);
+        return rpModifyMember;
+    }
+
+    //회원정보 수정
+    public void modify(Member.rqModifyMember rqModifyMember){
+        MultipartFile imageFile = rqModifyMember.getImageFile();
+        String profileImage = rqModifyMember.getProfileImage();
+        if( !imageFile.isEmpty() ) {
+            profileImage = imageFile.getOriginalFilename();
+            File saveFile = new File("/C:/IntelliJ/images/profile", profileImage);
+            if ( !saveFile.exists() ){
+                saveFile.mkdirs();
+            }else {
+                long time = System.currentTimeMillis();
+                profileImage = String.format("%d_%s", time, profileImage);
+                saveFile = new File("/C:/IntelliJ/images/profile", profileImage);
+            }
+            try {
+                imageFile.transferTo(saveFile);
+            }catch (IllegalStateException e){
+                e.printStackTrace();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        rqModifyMember.setProfileImage(profileImage);
+        Member member = rqModifyMember.toEntity();
+        memberRepository.updateChangePwd(member.getEmailId(), member.getName(), member.getPhoneNumber(),member.getAddress(), member.getDetailAddress(), member.getStudyType(), member.getBirthday(), member.getNickname(), member.getGender(), member.getSelfIntro(), member.getProfileImage());
     }
 }

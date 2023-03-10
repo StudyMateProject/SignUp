@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>MyPage</title>
+    <link rel="stylesheet" type="text/css" href="/css/header.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css" rel="stylesheet">
+</head>
+<style>
+    .container{
+        padding-top: 150px;
+    }
+</style>
+<body>
+    <header>
+        <nav class="headerContainer">
+            <div class="headerImg">
+                <a href="/" alt="SOJU">
+                    <img src="/img/betalogo.jpg" class="mainLogo">
+                </a>
+            </div>
+
+            <div class="headerMenu">
+                <div class="headerMenuLeft">
+
+                    <div class="categoryMenu">
+                        <span>스터디원</span>
+                        <div class="dropTable">
+                            <a class="dropRecruitStudy dropMenu" href="/recruitstudy">스터디원 모집</a>
+                            <a class="dropRecruitMentor dropMenu" href="/recruitmentorlist">멘토 모집</a>
+                            <a class="dropMentorProfile dropMenu" href="/mentorprofilelist">멘토 프로필</a>
+                        </div>
+                    </div>
+
+                    <div class="categoryMenu">
+                        <a href="/meta" class="metaMenu">
+                            <span class="categoryMenu">스터디룸</span>
+                        </a>
+                    </div>
+                    <div class="categoryMenu">
+                        <a href="/noticeroom" class="noticeRoomMenu">
+                            <span class="categoryMenu">게시판</span>
+                        </a>
+                    </div>
+                    <div class="categoryMenu">
+                        <a href="/store" class="storeMenu">
+                            <span class="categoryMenu">스토어</span>
+                        </a>
+                    </div>
+                    <div class="categoryMenu">
+                        <a href="/mypage" class="myPageMenu">
+                            <span class="categoryMenu">마이페이지</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="headerMenuRight">
+                    <div class="whenLogin">
+                        <div class="welcome"> 장유진님 반갑습니다! </div>
+                        <div class="notificationsMenu">
+                            <div class="icon" data-number="5">
+                                <i class="ri-notification-4-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btnLogin">
+                        <input class="inputButton" sec:authorize="isAnonymous()" type="button" value="로그인" onclick="location.href='/loginform'">
+                        <input class="inputButton" sec:authorize="isAuthenticated()" type="button" value="로그아웃" onclick="location.href='/logout'">
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section>
+        <div class="container">
+            <h2>My Page</h2>
+            <div class="profile">
+                <a href="/mypage/modifyform">개인정보 관리</a>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

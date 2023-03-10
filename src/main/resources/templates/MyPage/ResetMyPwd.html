@@ -2,14 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>비밀번호 재설정</title>
-    <link rel="stylesheet" type="text/css" href="/css/join_find.css">
+    <title>비밀번호 변경</title>
 </head>
 <body>
     <div class="container">
         <h2>비밀번호 재설정</h2>
         <form action="/loginform/findpwdform/resetpwdform" method="post">
-            <input type="hidden" name="emailId" th:value="${emailId}">
+            <input type="text" name="emailId" th:value="${emailId}">
             <ul class="ulJoinForm">
                 <li class="liJoinInput"><label class="labelText">새 비밀번호 </label><br><input id="pwd" name="pwd" class="inputText" placeholder="영문, 숫자, 특수기호를 포함하여 5자리 이상" type="password" oninput="pwdCheck(this.form)"><br></li>
                 <li class="liJoinInput"><label id="pwdText1" class="errorMsg"></label></li>
@@ -18,7 +17,7 @@
             </ul>
             <div class="divBtnJoin">
                 <input value="비밀번호 변경" class="btnJoin" type="button" onclick="resetPwd(this.form)">
-                <input value="취소" class="btnJoin" type="button" onclick="location.href='/loginform'">
+                <input value="취소" class="btnJoin" type="button" onclick="location.href='/'">
             </div>
         </form>
     </div>
@@ -95,7 +94,7 @@
         function ResultResetPwd () {
             if ( xhr.readyState == 4 && xhr.status == 200 ) {
                 let data = xhr.responseText;
-                location.href = "/loginform";
+                location.href = "/";
             }
         }
     </script>
