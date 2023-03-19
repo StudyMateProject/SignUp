@@ -2,6 +2,7 @@ package com.study.soju.controller;
 
 import com.study.soju.entity.Member;
 import com.study.soju.service.SignUpService;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,11 +51,14 @@ public class MainController {
 
     //마이페이지 이동
     @GetMapping("/mypage")
-    public String mypageList(Principal principal){
+    public String mypageList(Principal principal, Model model){
         if ( principal == null ) {
             return "redirect:/n";
+        } else {
+            Member.rpProfile rpProfile = signUpService.selectProfile(principal);
+            model.addAttribute("member", rpProfile);
+            return "/MyPage/MyPageHome";
         }
-        return "/MyPage/MyPageHome";
     }
 
     //개인정보 관리 이동

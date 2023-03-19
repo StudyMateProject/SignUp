@@ -185,6 +185,28 @@ public class Member {
         }
     }
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @ToString
+    public static class rpProfile {
+        private String emailId;
+        private String nickname;
+        private String selfIntro;
+        private String studyType;
+        private String profileImage;
+
+        public rpProfile (Member member) {
+            this.emailId = member.getEmailId();
+            this.nickname = member.getNickname();
+            this.selfIntro = member.getSelfIntro();
+            this.studyType = member.getStudyType();
+            this.profileImage = member.getProfileImage();
+        }
+    }
+
     //PWD 찾기 request
     @Getter
     @Setter

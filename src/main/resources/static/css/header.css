@@ -7,6 +7,13 @@ body{
     margin: 0 auto;
     padding: 0px;
 }
+img{
+    width: 100%;
+    height: 100%;
+}
+body{
+    display: block;
+}
 header{
     position:fixed;
     padding-top: 10px;
@@ -14,6 +21,7 @@ header{
     height: 80px;
     background-color: white;
     border-bottom: 5px solid #57B862;
+    z-index: 2;
 }
 *{
     font-family: 'NanumSquareNeo';
@@ -22,19 +30,20 @@ a{
     text-decoration-line: none;
     color: black;
 }
+.scrolledDown {
+    box-shadow: 0 10px 10px 1px rgba(0, 0, 0, 0.54);
+}
 
 .headerContainer{
     padding-top: 20px;
     display: flex;
 }
 .headerImg{
-    height: 55px;
-    width: 100px;
+    height: 70px;
+    width: 110px;
     margin-right: 15px;
 }
 .mainLogo{
-    height: 55px;
-    width: 100px;
     object-fit: contain;
 }
 .headerMenu{
@@ -104,8 +113,8 @@ a{
     background-color : #ececec;
 }
 .inputButtonLogin{
-    height: 35px;
-    font-size: 20px;
+    height: 30px;
+    font-size: 15px;
     background-color: #57B862;
     border: none;
     border-radius: 10px;

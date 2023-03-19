@@ -58,7 +58,7 @@ public class SignUpService implements UserDetailsService {
             // 보내는 사람 E-Mail, 제목, 내용
             String fromEmail = ""; // 보내는 사람 email - - hostSMTPid와 동일하게 작성
             String fromName = "관리자"; // 보내는 사람 이름
-            String subject = "[MATE] 이메일 인증번호 발송 안내입니다."; // 제목
+            String subject = "[Mate] 이메일 인증번호 발송 안내입니다."; // 제목
 
             // 받는 사람 E-Mail 주소
             String mail = emailId; // 받는 사람 email
@@ -78,7 +78,7 @@ public class SignUpService implements UserDetailsService {
                 email.setSubject(subject); // 제목
                 email.setHtmlMsg(
                         "<p>" + "[메일 인증 안내입니다.]" + "</p>" +
-                                "<p>" + "Study Mate를 사용해 주셔서 감사드립니다." + "</p>" +
+                                "<p>" + "Mate를 사용해 주셔서 감사드립니다." + "</p>" +
                                 "<p>" + "아래 인증 코드를 '인증번호'란에 입력해 주세요." + "</p>" +
                                 "<p>" + mailKey + "</p>"); // 본문 내용
                 email.send(); // 메일 보내기
@@ -167,7 +167,7 @@ public class SignUpService implements UserDetailsService {
             // 보내는 사람 E-Mail, 제목, 내용
             String fromEmail = ""; // 보내는 사람 email - - hostSMTPid와 동일하게 작성
             String fromName = "관리자"; // 보내는 사람 이름
-            String subject = "[MATE] 이메일 인증번호 발송 안내입니다."; // 제목
+            String subject = "[Mate] 이메일 인증번호 발송 안내입니다."; // 제목
 
             // 받는 사람 E-Mail 주소
             String mail = emailId; // 받는 사람 email
@@ -187,7 +187,7 @@ public class SignUpService implements UserDetailsService {
                 email.setSubject(subject); // 제목
                 email.setHtmlMsg(
                         "<p>" + "[메일 인증 안내입니다.]" + "</p>" +
-                                "<p>" + "MATE를 사용해 주셔서 감사드립니다." + "</p>" +
+                                "<p>" + "Mate를 사용해 주셔서 감사드립니다." + "</p>" +
                                 "<p>" + "아래 인증 코드를 '인증번호'란에 입력해 주세요." + "</p>" +
                                 "<p>" + mailKey + "</p>"); // 본문 내용
                 email.send(); // 메일 보내기
@@ -225,6 +225,14 @@ public class SignUpService implements UserDetailsService {
         Member member = memberRepository.findAll(emailId);
         Member.rpModifyMember rpModifyMember = new Member.rpModifyMember(member);
         return rpModifyMember;
+    }
+
+    //회원 프로필 조회
+    public Member.rpProfile selectProfile(Principal principal){
+        String emailId = principal.getName();
+        Member member = memberRepository.findAll(emailId);
+        Member.rpProfile rpProfile = new Member.rpProfile(member);
+        return rpProfile;
     }
 
     //회원정보 수정
